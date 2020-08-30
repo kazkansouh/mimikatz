@@ -238,7 +238,7 @@ BOOL kuhl_m_dpapi_chrome_alg_key_from_b64(LPCWSTR base64, int argc, wchar_t * ar
 		else PRINT_ERROR(L"Bad header\n");
 		LocalFree(keyWithHeader);
 	}
-	else PRINT_ERROR_AUTO(L"kull_m_string_quick_base64_to_Binary");
+	else PRINT_ERROR_AUTO_C("kull_m_string_quick_base64_to_Binary");
 	return status;
 }
 
@@ -268,7 +268,7 @@ BOOL kuhl_m_dpapi_chrome_alg_key_from_file(LPCWSTR szState, BOOL forced, int arg
 		}
 		LocalFree(data);
 	}
-	else if(forced) PRINT_ERROR_AUTO(L"kull_m_file_readData");
+	else if(forced) PRINT_ERROR_AUTO_C("kull_m_file_readData");
 	return status;
 }
 

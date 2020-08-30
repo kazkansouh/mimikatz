@@ -37,7 +37,7 @@ NTSTATUS kuhl_m_dpapi_lunahsm(int argc, wchar_t * argv[])
 			}
 			CloseHandle(hSoftware);
 		}
-		else PRINT_ERROR_AUTO(L"CreateFile (SOFTWARE hive)");
+		else PRINT_ERROR_AUTO_C("CreateFile (SOFTWARE hive)");
 	}
 	else
 	{
@@ -87,7 +87,7 @@ void kuhl_m_dpapi_safenet_ksp_registryparser(PKULL_M_REGISTRY_HANDLE hRegistry, 
 								kuhl_m_dpapi_safenet_ksp_registry_user_parser(hRegistry, hEntry, entropy, argc, argv);
 								kull_m_registry_RegCloseKey(hRegistry, hEntry);
 							}
-							else PRINT_ERROR_AUTO(L"kull_m_registry_RegOpenKeyEx");
+							else PRINT_ERROR_AUTO_C("kull_m_registry_RegOpenKeyEx");
 							LocalFree(aKeyName);
 						}
 					}
@@ -95,7 +95,7 @@ void kuhl_m_dpapi_safenet_ksp_registryparser(PKULL_M_REGISTRY_HANDLE hRegistry, 
 				LocalFree(keyName);
 			}
 		}
-		else PRINT_ERROR_AUTO(L"kull_m_registry_RegQueryInfoKey");
+		else PRINT_ERROR_AUTO_C("kull_m_registry_RegQueryInfoKey");
 		kull_m_registry_RegCloseKey(hRegistry, hKeys);
 	}
 

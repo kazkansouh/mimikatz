@@ -6,30 +6,30 @@
 #include "kuhl_m_dpapi.h"
 
 const KUHL_M_C kuhl_m_c_dpapi[] = {
-	{kuhl_m_dpapi_blob,			L"blob",		L"Describe a DPAPI blob, unprotect it with API or Masterkey"},
-	{kuhl_m_dpapi_protect,		L"protect",		L"Protect a data via a DPAPI call"},
-	{kuhl_m_dpapi_masterkey,	L"masterkey",	L"Describe a Masterkey file, unprotect each Masterkey (key depending)"},
-	{kuhl_m_dpapi_credhist,		L"credhist",	L"Describe a Credhist file"},
-	{kuhl_m_dpapi_create,		L"create",		L"Create a Masterkey file from raw key and metadata"},
+	{kuhl_m_dpapi_blob,			"blob",		"Describe a DPAPI blob, unprotect it with API or Masterkey"},
+	{kuhl_m_dpapi_protect,		"protect",		"Protect a data via a DPAPI call"},
+	{kuhl_m_dpapi_masterkey,	"masterkey",	"Describe a Masterkey file, unprotect each Masterkey (key depending)"},
+	{kuhl_m_dpapi_credhist,		"credhist",	"Describe a Credhist file"},
+	{kuhl_m_dpapi_create,		"create",		"Create a Masterkey file from raw key and metadata"},
 	
-	{kuhl_m_dpapi_keys_capi,	L"capi",		L"CAPI key test"},
-	{kuhl_m_dpapi_keys_cng,		L"cng",			L"CNG key test"},
-	{kuhl_m_dpapi_keys_tpm,		L"tpm",			L"TPM key test"},
-	{kuhl_m_dpapi_cred,			L"cred",		L"CRED test"},
-	{kuhl_m_dpapi_vault,		L"vault",		L"VAULT test"},
-	{kuhl_m_dpapi_wifi,			L"wifi",		L"WiFi test"},
-	{kuhl_m_dpapi_wwan,			L"wwan",		L"Wwan test"},
-	{kuhl_m_dpapi_chrome,		L"chrome",		L"Chrome test"},
-	{kuhl_m_dpapi_ssh,			L"ssh",			L"SSH Agent registry cache"},
-	{kuhl_m_dpapi_rdg,			L"rdg",			L"RDG saved passwords"},
-	{kuhl_m_dpapi_powershell,	L"ps",			L"PowerShell credentials (PSCredentials or SecureString)"},
-	{kuhl_m_dpapi_lunahsm,		L"luna",		L"Safenet LunaHSM KSP"},
-	{kuhl_m_dpapi_cloudap_keyvalue_derived,	L"cloudapkd",	L""},
-	{kuhl_m_dpapi_cloudap_fromreg, L"cloudapreg",	L""},
-	{kuhl_m_dpapi_oe_cache,		L"cache", NULL},
+	{kuhl_m_dpapi_keys_capi,	"capi",		"CAPI key test"},
+	{kuhl_m_dpapi_keys_cng,		"cng",			"CNG key test"},
+	{kuhl_m_dpapi_keys_tpm,		"tpm",			"TPM key test"},
+	{kuhl_m_dpapi_cred,			"cred",		"CRED test"},
+	{kuhl_m_dpapi_vault,		"vault",		"VAULT test"},
+	{kuhl_m_dpapi_wifi,			"wifi",		"WiFi test"},
+	{kuhl_m_dpapi_wwan,			"wwan",		"Wwan test"},
+	{kuhl_m_dpapi_chrome,		"chrome",		"Chrome test"},
+	{kuhl_m_dpapi_ssh,			"ssh",			"SSH Agent registry cache"},
+	{kuhl_m_dpapi_rdg,			"rdg",			"RDG saved passwords"},
+	{kuhl_m_dpapi_powershell,	"ps",			"PowerShell credentials (PSCredentials or SecureString)"},
+	{kuhl_m_dpapi_lunahsm,		"luna",		"Safenet LunaHSM KSP"},
+	{kuhl_m_dpapi_cloudap_keyvalue_derived,	"cloudapkd",	""},
+	{kuhl_m_dpapi_cloudap_fromreg, "cloudapreg",	""},
+	{kuhl_m_dpapi_oe_cache,		"cache", NULL},
 };
 const KUHL_M kuhl_m_dpapi = {
-	L"dpapi",	L"DPAPI Module (by API or RAW access)", L"Data Protection application programming interface",
+	L"dpapi",	L"DPAPI Module (by API or RAW access)", "Data Protection application programming interface",
 	ARRAYSIZE(kuhl_m_c_dpapi), kuhl_m_c_dpapi, NULL, kuhl_m_dpapi_oe_clean
 };
 
@@ -43,7 +43,7 @@ NTSTATUS kuhl_m_dpapi_blob(int argc, wchar_t * argv[])
 	if(kull_m_string_args_byName(argc, argv, L"in", &szData, NULL))
 	{
 		if(!kull_m_file_readData(szData, &dataIn.pbData, &dataIn.cbData))
-			PRINT_ERROR_AUTO(L"kull_m_file_readData");
+			PRINT_ERROR_AUTO_C("kull_m_file_readData");
 	}
 	else if(kull_m_string_args_byName(argc, argv, L"raw", &szData, NULL))
 	{
@@ -136,7 +136,7 @@ NTSTATUS kuhl_m_dpapi_protect(int argc, wchar_t * argv[]) // no support for prot
 		}
 		LocalFree(dataOut.pbData);
 	}
-	else PRINT_ERROR_AUTO(L"CryptProtectData");
+	else PRINT_ERROR_AUTO_C("CryptProtectData");
 
 	if(dataEntropy.pbData)
 		LocalFree(dataEntropy.pbData);
@@ -186,7 +186,7 @@ NTSTATUS kuhl_m_dpapi_masterkey(int argc, wchar_t * argv[])
 						ConvertSidToStringSid(pSid, &convertedSid);
 						LocalFree(pSid);
 					}
-					else PRINT_ERROR_AUTO(L"ConvertStringSidToSid");
+					else PRINT_ERROR_AUTO_C("ConvertStringSidToSid");
 				}
 				else kuhl_m_dpapi_oe_autosid(szIn, &convertedSid);
 
@@ -423,9 +423,9 @@ void kuhl_m_dpapi_create_data(LPCWSTR sid, LPCGUID guid, LPCBYTE key, DWORD cbKe
 					{
 						if(SetFileAttributes(guidFilename, FILE_ATTRIBUTE_HIDDEN | FILE_ATTRIBUTE_SYSTEM | FILE_ATTRIBUTE_ARCHIVE))
 							kprintf(L"OK\n");
-						else PRINT_ERROR_AUTO(L"SetFileAttributes");
+						else PRINT_ERROR_AUTO_C("SetFileAttributes");
 					}
-					else PRINT_ERROR_AUTO(L"kull_m_file_writeData");
+					else PRINT_ERROR_AUTO_C("kull_m_file_writeData");
 					LocalFree(data);
 				}
 				LocalFree(masterkey.pbKey);
@@ -466,7 +466,7 @@ NTSTATUS kuhl_m_dpapi_create(int argc, wchar_t * argv[])
 				ConvertSidToStringSid(pSid, &convertedSid);
 				LocalFree(pSid);
 			}
-			else PRINT_ERROR_AUTO(L"ConvertStringSidToSid");
+			else PRINT_ERROR_AUTO_C("ConvertStringSidToSid");
 		}
 		else convertedSid = kull_m_token_getCurrentSid();
 		if(convertedSid)
@@ -578,7 +578,7 @@ NTSTATUS kuhl_m_dpapi_credhist(int argc, wchar_t * argv[])
 				{
 					if(ConvertStringSidToSid(szSid, &pSid))
 						prevSid = pSid;
-					else PRINT_ERROR_AUTO(L"ConvertStringSidToSid");
+					else PRINT_ERROR_AUTO_C("ConvertStringSidToSid");
 				}
 				
 				if(kull_m_string_args_byName(argc, argv, L"password", &szPassword, NULL))
@@ -713,7 +713,7 @@ BOOL kuhl_m_dpapi_unprotect_raw_or_blob(LPCVOID pDataIn, DWORD dwDataInLen, LPWS
 						kull_m_string_displayGUID(&blob->guidMasterKey);
 						kprintf(L"\n");
 					}
-					else PRINT_ERROR_AUTO(L"CryptUnprotectData");
+					else PRINT_ERROR_AUTO_C("CryptUnprotectData");
 				}
 			}
 			//kprintf(L"\n");

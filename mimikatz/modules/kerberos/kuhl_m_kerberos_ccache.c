@@ -92,7 +92,7 @@ NTSTATUS kuhl_m_kerberos_ccache_enum(int argc, wchar_t * argv[], BOOL isInject, 
 											{
 												if(kull_m_file_writeData(saveFilename, BerApp_KrbCred->bv_val, BerApp_KrbCred->bv_len))
 													kprintf(L"\n\t   * Saved to file %s !", saveFilename);
-												else PRINT_ERROR_AUTO(L"kull_m_file_writeData");
+												else PRINT_ERROR_AUTO_C("kull_m_file_writeData");
 
 												LocalFree(saveFilename);
 											}
@@ -111,7 +111,7 @@ NTSTATUS kuhl_m_kerberos_ccache_enum(int argc, wchar_t * argv[], BOOL isInject, 
 			else PRINT_ERROR(L"ccache version != 0x0504 or version != 0x0503\n");
 			LocalFree(file);
 		}
-		else PRINT_ERROR_AUTO(L"kull_m_file_readData");
+		else PRINT_ERROR_AUTO_C("kull_m_file_readData");
 	}
 	else PRINT_ERROR(L"At least one filename is needed\n");
 	return STATUS_SUCCESS;
@@ -195,7 +195,7 @@ wchar_t * kuhl_m_kerberos_ccache_generateFileName(const DWORD index, PKIWI_KERBE
 	if(buffer = (wchar_t *) LocalAlloc(LPTR, charCount * sizeof(wchar_t)))
 	{
 		if(isLong)
-			isLong = swprintf_s(buffer, charCount, L"%u-%08x-%wZ@%wZ-%wZ.%s", index, ticket->TicketFlags, &ticket->ClientName->Names[0], &ticket->ServiceName->Names[0], &ticket->ServiceName->Names[1], ext) > 0;
+			isLong = swprintf_s(buffer, charCount, L"%u-%08x-%wZ@[%wZ]-%wZ.%s", index, ticket->TicketFlags, &ticket->ClientName->Names[0], &ticket->ServiceName->Names[0], &ticket->ServiceName->Names[1], ext) > 0;
 		else
 			isLong = swprintf_s(buffer, charCount, L"%u-%08x.%s", index, ticket->TicketFlags, ext) > 0;
 		

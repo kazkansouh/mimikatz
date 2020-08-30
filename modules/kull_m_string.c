@@ -223,7 +223,7 @@ void kull_m_string_displaySID(IN PSID pSid)
 		kprintf(L"%s", stringSid);
 		LocalFree(stringSid);
 	}
-	else PRINT_ERROR_AUTO(L"ConvertSidToStringSid");
+	else PRINT_ERROR_AUTO_C("ConvertSidToStringSid");
 }
 #if !defined(MIMIKATZ_W2000_SUPPORT)
 PWSTR kull_m_string_getRandomGUID()

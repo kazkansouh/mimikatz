@@ -73,13 +73,13 @@ void mimikatz_begin()
 	SetConsoleTitle(MIMIKATZ L" " MIMIKATZ_VERSION L" " MIMIKATZ_ARCH L" (oe.eo)");
 	SetConsoleCtrlHandler(HandlerRoutine, TRUE);
 #endif
-	kprintf(L"\n"
-		L"  .#####.   " MIMIKATZ_FULL L"\n"
-		L" .## ^ ##.  " MIMIKATZ_SECOND L" - (oe.eo)\n"
-		L" ## / \\ ##  /*** Benjamin DELPY `gentilkiwi` ( benjamin@gentilkiwi.com )\n"
-		L" ## \\ / ##       > http://blog.gentilkiwi.com/mimikatz\n"
-		L" '## v ##'       Vincent LE TOUX             ( vincent.letoux@gmail.com )\n"
-		L"  '#####'        > http://pingcastle.com / http://mysmartlogon.com   ***/\n");
+	kprintf(L"%hs%ls%hs%ls%hs", "\n"
+		"  .#####.   ", MIMIKATZ_FULL, "\n"
+		" .## ^ ##.  ", MIMIKATZ_SECOND, " - (oe.eo)\n"
+		" ## / \\ ##  /*** Benjamin DELPY `gentilkiwi` ( benjamin@gentilkiwi.com )\n"
+		" ## \\ / ##       > http://blog.gentilkiwi.com\n"
+		" '## v ##'       Vincent LE TOUX             ( vincent.letoux@gmail.com )\n"
+		"  '#####'        > http://pingcastle.com / http://mysmartlogon.com   ***/\n");
 	mimikatz_initOrClean(TRUE);
 }
 
@@ -189,11 +189,16 @@ NTSTATUS mimikatz_doLocal(wchar_t * input)
 		}
 		else command = argv[0];
 
+		const char* acommand = NULL;
+		if (command) {
+			acommand = kull_m_string_unicode_to_ansi(command);
+		}
+
 		for(indexModule = 0; !moduleFound && (indexModule < ARRAYSIZE(mimikatz_modules)); indexModule++)
 			if(moduleFound = (!module || (_wcsicmp(module, mimikatz_modules[indexModule]->shortName) == 0)))
-				if(command)
+				if(acommand)
 					for(indexCommand = 0; !commandFound && (indexCommand < mimikatz_modules[indexModule]->nbCommands); indexCommand++)
-						if(commandFound = _wcsicmp(command, mimikatz_modules[indexModule]->commands[indexCommand].command) == 0)
+						if(commandFound = _stricmp(acommand, mimikatz_modules[indexModule]->commands[indexCommand].command) == 0)
 							status = mimikatz_modules[indexModule]->commands[indexCommand].pCommand(argc - 1, argv + 1);
 
 		if(!moduleFound)
@@ -205,7 +210,7 @@ NTSTATUS mimikatz_doLocal(wchar_t * input)
 				if(mimikatz_modules[indexModule]->fullName)
 					kprintf(L"  -  %s", mimikatz_modules[indexModule]->fullName);
 				if(mimikatz_modules[indexModule]->description)
-					kprintf(L"  [%s]", mimikatz_modules[indexModule]->description);
+					kprintf(L"  [%hs]", mimikatz_modules[indexModule]->description);
 			}
 			kprintf(L"\n");
 		}
@@ -218,20 +223,22 @@ NTSTATUS mimikatz_doLocal(wchar_t * input)
 			if(mimikatz_modules[indexModule]->fullName)
 				kprintf(L"\nFull name :\t%s", mimikatz_modules[indexModule]->fullName);
 			if(mimikatz_modules[indexModule]->description)
-				kprintf(L"\nDescription :\t%s", mimikatz_modules[indexModule]->description);
+				kprintf(L"\nDescription :\t%hs", mimikatz_modules[indexModule]->description);
 			kprintf(L"\n");
 
 			for(indexCommand = 0; indexCommand < mimikatz_modules[indexModule]->nbCommands; indexCommand++)
 			{
-				kprintf(L"\n%16s", mimikatz_modules[indexModule]->commands[indexCommand].command);
+				kprintf(L"\n%16hs", mimikatz_modules[indexModule]->commands[indexCommand].command);
 				if(mimikatz_modules[indexModule]->commands[indexCommand].description)
-					kprintf(L"  -  %s", mimikatz_modules[indexModule]->commands[indexCommand].description);
+					kprintf(L"  -  %hs", mimikatz_modules[indexModule]->commands[indexCommand].description);
 			}
 			kprintf(L"\n");
 		}
 
 		if(module)
 			LocalFree(module);
+		if (acommand)
+			LocalFree((void*)acommand);
 		LocalFree(argv);
 	}
 	return status;

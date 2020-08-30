@@ -168,9 +168,9 @@ BOOL sr98_send_receive(HANDLE hFile, BYTE ctl, LPCVOID in, BYTE szIn, LPBYTE *ou
 				}
 				else PRINT_ERROR(L"Read size = %u\n", ret);
 			}
-			else PRINT_ERROR_AUTO(L"ReadFile");
+			else PRINT_ERROR_AUTO_C("ReadFile");
 		}
-		else PRINT_ERROR_AUTO(L"WriteFile");
+		else PRINT_ERROR_AUTO_C("WriteFile");
 	}
 	return status;
 }
@@ -236,7 +236,7 @@ BOOL sr98_devices_get(PSR98_DEVICE *devices, DWORD *count)
 											}
 											else
 											{
-												PRINT_ERROR_AUTO(L"CreateFile (hDevice)");
+												PRINT_ERROR_AUTO_C("CreateFile (hDevice)");
 												*next = (PSR98_DEVICE) LocalFree(*next);
 											}
 										}
@@ -244,7 +244,7 @@ BOOL sr98_devices_get(PSR98_DEVICE *devices, DWORD *count)
 								}
 								CloseHandle(deviceHandle);
 							}
-							else PRINT_ERROR_AUTO(L"CreateFile (deviceHandle)");
+							else PRINT_ERROR_AUTO_C("CreateFile (deviceHandle)");
 						}
 						LocalFree(DeviceInterfaceDetailData);
 					}
@@ -253,7 +253,7 @@ BOOL sr98_devices_get(PSR98_DEVICE *devices, DWORD *count)
 		}
 		SetupDiDestroyDeviceInfoList(hDevInfo);
 	}
-	else PRINT_ERROR_AUTO(L"SetupDiGetClassDevs");
+	else PRINT_ERROR_AUTO_C("SetupDiGetClassDevs");
 
 	if(count)
 		*count = id;

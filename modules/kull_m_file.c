@@ -99,7 +99,7 @@ BOOL kull_m_file_readGeneric(PCWCHAR fileName, PBYTE * data, PDWORD lenght, DWOR
 	if(isBase64InterceptInput)
 	{
 		if(!(reussite = kull_m_string_quick_base64_to_Binary(fileName, data, lenght)))
-			PRINT_ERROR_AUTO(L"kull_m_string_quick_base64_to_Binary");
+			PRINT_ERROR_AUTO_C("kull_m_string_quick_base64_to_Binary");
 	}
 	else if((hFile = CreateFile(fileName, GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, flags, NULL)) && hFile != INVALID_HANDLE_VALUE)
 	{

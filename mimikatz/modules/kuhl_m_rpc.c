@@ -12,10 +12,10 @@ MIMI_HANDLE hMimi;
 PKIWI_DH clientKey;
 
 const KUHL_M_C kuhl_m_c_rpc[] = {
-	{kuhl_m_rpc_server,	L"server",	NULL},
-	{kuhl_m_rpc_connect,L"connect",	NULL},
-	{kuhl_m_rpc_close,	L"close",	NULL},
-	{kuhl_m_rpc_enum,	L"enum",	NULL},
+	{kuhl_m_rpc_server,	"server",	NULL},
+	{kuhl_m_rpc_connect,"connect",	NULL},
+	{kuhl_m_rpc_close,	"close",	NULL},
+	{kuhl_m_rpc_enum,	"enum",	NULL},
 };
 const KUHL_M kuhl_m_rpc = {
 	L"rpc",	L"RPC control of " MIMIKATZ,	NULL,
@@ -60,7 +60,7 @@ NTSTATUS kuhl_m_rpc_do(wchar_t * input)
 						for(i = 0; (i < (szClearResult / sizeof(wchar_t))) && ((wchar_t *) clearResult)[i]; i++)
 							kprintf(L"%c", ((wchar_t *) clearResult)[i]);
 					}
-					else PRINT_ERROR_AUTO(L"kuhl_m_rpc_simpleDecrypt");
+					else PRINT_ERROR_AUTO_C("kuhl_m_rpc_simpleDecrypt");
 					midl_user_free(encResult);
 				}
 			}
@@ -78,7 +78,7 @@ NTSTATUS kuhl_m_rpc_do(wchar_t * input)
 			}
 			RpcEndExcept
 		}
-		else PRINT_ERROR_AUTO(L"kull_m_crypto_dh_simpleEncrypt");
+		else PRINT_ERROR_AUTO_C("kull_m_crypto_dh_simpleEncrypt");
 	}
 	else PRINT_ERROR(L"No RPC_BINDING_HANDLE (connect first?)\n");
 	return STATUS_SUCCESS;
@@ -332,7 +332,7 @@ NTSTATUS kuhl_m_rpc_connect(int argc, wchar_t * argv[])
 							kprintf(MIMIKATZ L" is bound!\n");
 							if(kull_m_crypto_dh_CreateSessionKey(clientKey, &serverKey))
 								status = RPC_S_OK;
-							else PRINT_ERROR_AUTO(L"kull_m_crypto_dh_CreateSessionKey");
+							else PRINT_ERROR_AUTO_C("kull_m_crypto_dh_CreateSessionKey");
 						}
 						else PRINT_ERROR(L"CLI_MimiBind: %08x\n", ntStatus);
 					}
@@ -349,7 +349,7 @@ NTSTATUS kuhl_m_rpc_connect(int argc, wchar_t * argv[])
 					}
 					RpcEndExcept
 				}
-				else PRINT_ERROR_AUTO(L"kull_m_crypto_dh_Create");
+				else PRINT_ERROR_AUTO_C("kull_m_crypto_dh_Create");
 			}
 			else
 			{

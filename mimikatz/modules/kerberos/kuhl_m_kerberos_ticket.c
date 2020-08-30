@@ -35,7 +35,7 @@ void kuhl_m_kerberos_ticket_display(PKIWI_KERBEROS_TICKET ticket, BOOL withKey, 
 		kprintf(L"\n\t     ");
 		if(ticket->Ticket.Value)
 			kull_m_string_wprintf_hex(ticket->Ticket.Value, ticket->Ticket.Length, 1);
-		else PRINT_ERROR_AUTO(L"NULL Ticket Value !");
+		else PRINT_ERROR_AUTO_C("NULL Ticket Value !");
 	}
 	else kprintf(L"\t[...]");
 }

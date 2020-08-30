@@ -6,9 +6,9 @@
 #include "kuhl_m_ts.h"
 
 const KUHL_M_C kuhl_m_c_ts[] = {
-	{kuhl_m_ts_multirdp,	L"multirdp",	L"[experimental] patch Terminal Server service to allow multiples users"},
-	{kuhl_m_ts_sessions,	L"sessions",	NULL},
-	{kuhl_m_ts_remote,		L"remote",		NULL},
+	{kuhl_m_ts_multirdp,	"multirdp",	"[experimental] patch Terminal Server service to allow multiples users"},
+	{kuhl_m_ts_sessions,	"sessions",	NULL},
+	{kuhl_m_ts_remote,		"remote",		NULL},
 };
 const KUHL_M kuhl_m_ts = {
 	L"ts",	L"Terminal Server module", NULL,
@@ -71,7 +71,7 @@ NTSTATUS kuhl_m_ts_sessions(int argc, wchar_t * argv[])
 		kprintf(L"Remote server: %s\n", szServer);
 		hServer = WinStationOpenServerW((PWSTR) szServer);
 		if(!hServer)
-			PRINT_ERROR_AUTO(L"WinStationOpenServerW");
+			PRINT_ERROR_AUTO_C("WinStationOpenServerW");
 	}
 
 	if(hServer || !szServer)
@@ -135,7 +135,7 @@ NTSTATUS kuhl_m_ts_sessions(int argc, wchar_t * argv[])
 				PRINT_ERROR(L"WinStationEnumerateW gave 0 result (maybe access problem?)\n");
 			WinStationFreeMemory(sessions);
 		}
-		else PRINT_ERROR_AUTO(L"WinStationEnumerateW");
+		else PRINT_ERROR_AUTO_C("WinStationEnumerateW");
 	}
 	else PRINT_ERROR(L"No server HANDLE\n");
 	if(hServer)
@@ -166,7 +166,7 @@ NTSTATUS kuhl_m_ts_remote(int argc, wchar_t * argv[])
 			kprintf(L"Connected to %u\n", id);
 		else if(GetLastError() == ERROR_LOGON_FAILURE)
 			PRINT_ERROR(L"Bad password for this session (take care to not lock the account!)\n");
-		else PRINT_ERROR_AUTO(L"WinStationConnect");
+		else PRINT_ERROR_AUTO_C("WinStationConnect");
 	}
 	else PRINT_ERROR(L"Argument id is needed\n");
 	return STATUS_SUCCESS;

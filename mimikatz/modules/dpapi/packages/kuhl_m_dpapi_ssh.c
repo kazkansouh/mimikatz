@@ -26,7 +26,7 @@ NTSTATUS kuhl_m_dpapi_ssh(int argc, wchar_t * argv[])
 			}
 			CloseHandle(hHive);
 		}
-		else PRINT_ERROR_AUTO(L"CreateFile");
+		else PRINT_ERROR_AUTO_C("CreateFile");
 	}
 	else
 	{
@@ -53,7 +53,7 @@ NTSTATUS kuhl_m_dpapi_ssh(int argc, wchar_t * argv[])
 										kuhl_m_dpapi_ssh_keys4user(hRegistry, hUser, keyName, argc, argv);
 										kull_m_registry_RegCloseKey(hRegistry, hUser);
 									}
-									else PRINT_ERROR_AUTO(L"kull_m_registry_RegOpenKeyEx");
+									else PRINT_ERROR_AUTO_C("kull_m_registry_RegOpenKeyEx");
 								}
 							}
 						}
@@ -62,7 +62,7 @@ NTSTATUS kuhl_m_dpapi_ssh(int argc, wchar_t * argv[])
 				}
 				kull_m_registry_RegCloseKey(hRegistry, hBase);
 			}
-			else PRINT_ERROR_AUTO(L"kull_m_registry_RegOpenKeyEx");
+			else PRINT_ERROR_AUTO_C("kull_m_registry_RegOpenKeyEx");
 			kull_m_registry_close(hRegistry);
 		}
 	}
@@ -89,9 +89,9 @@ void kuhl_m_dpapi_ssh_keys4user(PKULL_M_REGISTRY_HANDLE hRegistry, HKEY hUser, L
 					kprintf(L"   ");
 					kuhl_m_token_displayAccount(tokenData.hToken, FALSE);
 				}
-				else PRINT_ERROR_AUTO(L"kull_m_token_getTokensUnique/kull_m_token_getTokensUnique");
+				else PRINT_ERROR_AUTO_C("kull_m_token_getTokensUnique/kull_m_token_getTokensUnique");
 			}
-			else PRINT_ERROR_AUTO(L"ConvertStringSidToSid");
+			else PRINT_ERROR_AUTO_C("ConvertStringSidToSid");
 		}
 
 		if(kull_m_registry_RegQueryInfoKey(hRegistry, hKeys, NULL, NULL, NULL, &nbSubKeys, &szMaxSubKeyLen, NULL, NULL, NULL, NULL, NULL, NULL))
@@ -111,13 +111,13 @@ void kuhl_m_dpapi_ssh_keys4user(PKULL_M_REGISTRY_HANDLE hRegistry, HKEY hUser, L
 							kuhl_m_dpapi_ssh_getKey(hRegistry, hEntry,  argc, argv, tokenData.hToken);
 							kull_m_registry_RegCloseKey(hRegistry, hEntry);
 						}
-						else PRINT_ERROR_AUTO(L"kull_m_registry_RegOpenKeyEx");
+						else PRINT_ERROR_AUTO_C("kull_m_registry_RegOpenKeyEx");
 					}
 				}
 				LocalFree(keyName);
 			}
 		}
-		else PRINT_ERROR_AUTO(L"kull_m_registry_RegQueryInfoKey");
+		else PRINT_ERROR_AUTO_C("kull_m_registry_RegQueryInfoKey");
 
 		if(tokenData.pSid)
 			LocalFree(tokenData.pSid);
@@ -248,7 +248,7 @@ BOOL kuhl_m_dpapi_ssh_getRSAfromRAW(LPCBYTE data, DWORD szData)
 										kprintf(L"%S", b64Out);
 										LocalFree(b64Out);
 									}
-									else PRINT_ERROR_AUTO(L"kull_m_string_EncodeB64_headers");
+									else PRINT_ERROR_AUTO_C("kull_m_string_EncodeB64_headers");
 									LocalFree(Asn1Blob.pbData);
 								}
 							}

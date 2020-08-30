@@ -63,11 +63,11 @@ BOOL kull_m_net_getComputerName(BOOL isFull, LPWSTR *name)
 		{
 			if(!(status = GetComputerNameEx(ft, *name, &dwSize)))
 			{
-				PRINT_ERROR_AUTO(L"GetComputerNameEx(data)");
+				PRINT_ERROR_AUTO_C("GetComputerNameEx(data)");
 				LocalFree(*name);
 			}
 		}
 	}
-	else PRINT_ERROR_AUTO(L"GetComputerNameEx(init)");
+	else PRINT_ERROR_AUTO_C("GetComputerNameEx(init)");
 	return status;
 }

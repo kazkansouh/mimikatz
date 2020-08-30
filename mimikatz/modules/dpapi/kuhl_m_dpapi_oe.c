@@ -516,7 +516,7 @@ BOOL kuhl_m_dpapi_oe_SaveToFile(LPCWSTR filename)
 		kprintf(L"Write file \'%s\': ", filename);
 		if(kull_m_file_writeData(filename, pData, dwData))
 			kprintf(L"OK\n");
-		else PRINT_ERROR_AUTO(L"\nkull_m_file_writeData");
+		else PRINT_ERROR_AUTO_C("\nkull_m_file_writeData");
 		LocalFree(pData);
 	}
 
@@ -575,7 +575,7 @@ BOOL kuhl_m_dpapi_oe_LoadFromFile(LPCWSTR filename)
 		}
 		LocalFree(dataIn);
 	}
-	else PRINT_ERROR_AUTO(L"kull_m_file_readData");
+	else PRINT_ERROR_AUTO_C("kull_m_file_readData");
 
 	return status;
 }

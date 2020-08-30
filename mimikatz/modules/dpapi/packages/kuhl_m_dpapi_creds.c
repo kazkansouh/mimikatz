@@ -54,7 +54,7 @@ NTSTATUS kuhl_m_dpapi_cred(int argc, wchar_t * argv[])
 				LocalFree(file);
 			}
 		}
-		else PRINT_ERROR_AUTO(L"kull_m_file_readData");
+		else PRINT_ERROR_AUTO_C("kull_m_file_readData");
 	}
 	else PRINT_ERROR(L"Input CRED file needed (/in:file)\n");
 	return STATUS_SUCCESS;
@@ -131,7 +131,7 @@ NTSTATUS kuhl_m_dpapi_vault(int argc, wchar_t * argv[])
 																	kprintf(L"\n");
 																}
 															}
-															else PRINT_ERROR_AUTO(L"CryptDecrypt");
+															else PRINT_ERROR_AUTO_C("CryptDecrypt");
 														}
 														LocalFree(buffer);
 													}
@@ -148,13 +148,13 @@ NTSTATUS kuhl_m_dpapi_vault(int argc, wchar_t * argv[])
 						}
 						LocalFree(filePolicy);
 					}
-					else PRINT_ERROR_AUTO(L"kull_m_file_readData (policy)");
+					else PRINT_ERROR_AUTO_C("kull_m_file_readData (policy)");
 				}
 				kull_m_cred_vault_credential_delete(vaultCredential);
 			}
 			LocalFree(fileCred);
 		}
-		else PRINT_ERROR_AUTO(L"kull_m_file_readData (cred)");
+		else PRINT_ERROR_AUTO_C("kull_m_file_readData (cred)");
 	}
 	else PRINT_ERROR(L"Input Cred file needed (/cred:file)\n");
 

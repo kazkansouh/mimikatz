@@ -6,8 +6,8 @@
 #include "kuhl_m_event.h"
 
 const KUHL_M_C kuhl_m_c_event[] = {
-	{kuhl_m_event_drop,		L"drop",	L"[experimental] patch Events service to avoid new events"},
-	{kuhl_m_event_clear,	L"clear",	L"Clear an event log"},
+	{kuhl_m_event_drop,		"drop",	"[experimental] patch Events service to avoid new events"},
+	{kuhl_m_event_clear,	"clear",	"Clear an event log"},
 };
 const KUHL_M kuhl_m_event = {
 	L"event", L"Event module", NULL,
@@ -94,11 +94,11 @@ NTSTATUS kuhl_m_event_clear(int argc, wchar_t * argv[])
 			kprintf(L"- %u event(s)\n", nbEvents);
 		if(ClearEventLog(hEventLog, NULL))
 			kprintf(L"- Cleared !\n");
-		else PRINT_ERROR_AUTO(L"ClearEventLog");
+		else PRINT_ERROR_AUTO_C("ClearEventLog");
 		if(GetNumberOfEventLogRecords(hEventLog, &nbEvents))
 			kprintf(L"- %u event(s)\n", nbEvents);
 	}
-	else PRINT_ERROR_AUTO(L"OpenEventLog");
+	else PRINT_ERROR_AUTO_C("OpenEventLog");
 
 	return STATUS_SUCCESS;
 }

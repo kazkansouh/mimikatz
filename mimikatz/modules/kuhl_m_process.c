@@ -6,15 +6,15 @@
 #include "kuhl_m_process.h"
 
 const KUHL_M_C kuhl_m_c_process[] = {
-	{kuhl_m_process_list,		L"list",		L"List process"},
-	{kuhl_m_process_exports,	L"exports",		L"List exports"},
-	{kuhl_m_process_imports,	L"imports",		L"List imports"},
-	{kuhl_m_process_start,		L"start",		L"Start a process"},
-	{kuhl_m_process_stop,		L"stop",		L"Terminate a process"},
-	{kuhl_m_process_suspend,	L"suspend",		L"Suspend a process"},
-	{kuhl_m_process_resume,		L"resume",		L"Resume a process"},
-	{kuhl_m_process_run,		L"run",			L"Run!"},
-	{kuhl_m_process_runParent,	L"runp",		L""},
+	{kuhl_m_process_list,		"list",		"List process"},
+	{kuhl_m_process_exports,	"exports",		"List exports"},
+	{kuhl_m_process_imports,	"imports",		"List imports"},
+	{kuhl_m_process_start,		"start",		"Start a process"},
+	{kuhl_m_process_stop,		"stop",		"Terminate a process"},
+	{kuhl_m_process_suspend,	"suspend",		"Suspend a process"},
+	{kuhl_m_process_resume,		"resume",		"Resume a process"},
+	{kuhl_m_process_run,		"run",			"Run!"},
+	{kuhl_m_process_runParent,	"runp",		""},
 };
 
 const KUHL_M kuhl_m_process = {
@@ -37,7 +37,7 @@ NTSTATUS kuhl_m_process_start(int argc, wchar_t * argv[])
 		kprintf(L"Trying to start \"%s\" : ", commandLine);
 		if(kull_m_process_create(KULL_M_PROCESS_CREATE_NORMAL, commandLine, 0, NULL, 0, NULL, NULL, NULL, &informations, TRUE))
 			kprintf(L"OK ! (PID %u)\n", informations.dwProcessId);
-		else PRINT_ERROR_AUTO(L"kull_m_process_create");
+		else PRINT_ERROR_AUTO_C("kull_m_process_create");
 	}
 	return STATUS_SUCCESS;
 }
@@ -107,7 +107,7 @@ NTSTATUS kuhl_m_process_genericOperation(int argc, wchar_t * argv[], KUHL_M_PROC
 			else PRINT_ERROR(L"%s 0x%08x\n", szText, status);
 			CloseHandle(hProcess);
 		}
-		else PRINT_ERROR_AUTO(L"OpenProcess");
+		else PRINT_ERROR_AUTO_C("OpenProcess");
 	}
 	else PRINT_ERROR(L"pid (/pid:123) is missing");
 	return status;
@@ -151,7 +151,7 @@ NTSTATUS kuhl_m_process_callbackProcess(int argc, wchar_t * argv[], PKULL_M_MODU
 		type = KULL_M_MEMORY_TYPE_PROCESS;
 		pid = wcstoul(szPid, NULL, 0);
 		if(!(hProcess = OpenProcess(GENERIC_READ, FALSE, pid)))
-			PRINT_ERROR_AUTO(L"OpenProcess");
+			PRINT_ERROR_AUTO_C("OpenProcess");
 	}
 
 	if((type == KULL_M_MEMORY_TYPE_OWN) || hProcess)
@@ -161,7 +161,7 @@ NTSTATUS kuhl_m_process_callbackProcess(int argc, wchar_t * argv[], PKULL_M_MODU
 			kull_m_process_getVeryBasicModuleInformations(hMemoryProcess, callback, NULL);
 			kull_m_memory_close(hMemoryProcess);
 		}
-		else PRINT_ERROR_AUTO(L"kull_m_memory_open");
+		else PRINT_ERROR_AUTO_C("kull_m_memory_open");
 		
 		if(type == KULL_M_MEMORY_TYPE_PROCESS)
 			CloseHandle(hProcess);
@@ -249,11 +249,11 @@ BOOL kull_m_process_run_data(LPCWSTR commandLine, HANDLE hToken)
 					CloseHandle(pi.hThread);
 					CloseHandle(pi.hProcess);
 				}
-				else PRINT_ERROR_AUTO(L"CreateProcessAsUser");
+				else PRINT_ERROR_AUTO_C("CreateProcessAsUser");
 				if(env)
 					DestroyEnvironmentBlock(env);
 			}
-			else PRINT_ERROR_AUTO(L"CreateEnvironmentBlock");
+			else PRINT_ERROR_AUTO_C("CreateEnvironmentBlock");
 			CloseHandle(hOut);
 			if(si.hStdOutput)
 				CloseHandle(si.hStdOutput);
@@ -335,19 +335,19 @@ NTSTATUS kuhl_m_process_runParent(int argc, wchar_t * argv[])
 										CloseHandle(pi.hThread);
 										CloseHandle(pi.hProcess);
 									}
-									else PRINT_ERROR_AUTO(L"CreateProcess");
+									else PRINT_ERROR_AUTO_C("CreateProcess");
 								}
-								else PRINT_ERROR_AUTO(L"pUpdate");
+								else PRINT_ERROR_AUTO_C("pUpdate");
 								pDel(si.lpAttributeList);
 							}
-							else PRINT_ERROR_AUTO(L"pInit(data)");
+							else PRINT_ERROR_AUTO_C("pInit(data)");
 							LocalFree(si.lpAttributeList);
 						}
 					}
-					else PRINT_ERROR_AUTO(L"pInit(init)");
+					else PRINT_ERROR_AUTO_C("pInit(init)");
 					CloseHandle(hProcess);
 				}
-				else PRINT_ERROR_AUTO(L"OpenProcess");
+				else PRINT_ERROR_AUTO_C("OpenProcess");
 			}
 			else PRINT_ERROR(L"Unable to get function pointers: pInit %p ; pUpdate %p ; pDel %p\n");
 		}

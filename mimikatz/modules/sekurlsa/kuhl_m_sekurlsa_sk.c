@@ -132,17 +132,17 @@ DWORD kuhl_m_sekurlsa_sk_search_file(LPCWSTR filename)
 					{
 						if(ReadFile(hFile, buffer, toRead.LowPart, &dwBytesReaded, NULL))
 							c += kuhl_m_sekurlsa_sk_search(buffer, dwBytesReaded, TRUE);
-						else PRINT_ERROR_AUTO(L"ReadFile");
+						else PRINT_ERROR_AUTO_C("ReadFile");
 					}
-					else PRINT_ERROR_AUTO(L"SetFilePointerEx");
+					else PRINT_ERROR_AUTO_C("SetFilePointerEx");
 				}
 				LocalFree(buffer);
 			}
 		}
-		else PRINT_ERROR_AUTO(L"GetFileSizeEx");
+		else PRINT_ERROR_AUTO_C("GetFileSizeEx");
 		CloseHandle(hFile);
 	}
-	else PRINT_ERROR_AUTO(L"CreateFile");
+	else PRINT_ERROR_AUTO_C("CreateFile");
 	return c;
 }
 

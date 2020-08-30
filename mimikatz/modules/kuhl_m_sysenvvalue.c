@@ -6,10 +6,10 @@
 #include "kuhl_m_sysenvvalue.h"
 
 const KUHL_M_C kuhl_m_c_sysenv[] = {
-	{kuhl_m_sysenv_list,		L"list",	L"List ..."},
-	{kuhl_m_sysenv_get,			L"get",		L"Get ..."},
-	{kuhl_m_sysenv_set,			L"set",		L"Set ..."},
-	{kuhl_m_sysenv_del,			L"del",		L"Del ..."},
+	{kuhl_m_sysenv_list,		"list",	"List ..."},
+	{kuhl_m_sysenv_get,			"get",		"Get ..."},
+	{kuhl_m_sysenv_set,			"set",		"Set ..."},
+	{kuhl_m_sysenv_del,			"del",		"Del ..."},
 };
 const KUHL_M kuhl_m_sysenv = {
 	L"sysenv",	L"System Environment Value module", NULL,

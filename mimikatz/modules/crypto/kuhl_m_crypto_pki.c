@@ -16,12 +16,12 @@ BOOL kuhl_m_crypto_c_sc_auth_quickEncode(__in LPCSTR lpszStructType, __in const 
 		{
 			if(!(status = CryptEncodeObject(PKCS_7_ASN_ENCODING | X509_ASN_ENCODING, lpszStructType, pvStructInfo, data->pbData, &data->cbData)))
 			{
-				PRINT_ERROR_AUTO(L"CryptEncodeObject (data)");
+				PRINT_ERROR_AUTO_C("CryptEncodeObject (data)");
 				LocalFree(data->pbData);
 			}
 		}
 	}
-	else PRINT_ERROR_AUTO(L"CryptEncodeObject (init)");
+	else PRINT_ERROR_AUTO_C("CryptEncodeObject (init)");
 	return status;
 }
 
@@ -157,12 +157,12 @@ PCERT_PUBLIC_KEY_INFO getPublicKeyInfo(HCRYPTPROV_OR_NCRYPT_KEY_HANDLE hProv, DW
 		{
 			if(!CryptExportPublicKeyInfo(hProv, dwKeySpec, X509_ASN_ENCODING | PKCS_7_ASN_ENCODING, info, &cbInfo))
 			{
-				PRINT_ERROR_AUTO(L"CryptExportPublicKeyInfo (data)");
+				PRINT_ERROR_AUTO_C("CryptExportPublicKeyInfo (data)");
 				info = (PCERT_PUBLIC_KEY_INFO) LocalFree(info);
 			}
 		}
 	}
-	else PRINT_ERROR_AUTO(L"CryptExportPublicKeyInfo (init)");
+	else PRINT_ERROR_AUTO_C("CryptExportPublicKeyInfo (init)");
 	return info;
 }
 
@@ -173,9 +173,9 @@ BOOL makePin(HCRYPTPROV hProv, BOOL isHw, LPSTR pin)
 	{
 		if(!(status = CryptSetProvParam(hProv, PP_KEYEXCHANGE_PIN, (const BYTE *) pin, 0)))
 		{
-			PRINT_ERROR_AUTO(L"CryptSetProvParam(PP_KEYEXCHANGE_PIN)");
+			PRINT_ERROR_AUTO_C("CryptSetProvParam(PP_KEYEXCHANGE_PIN)");
 			if(!(status = CryptSetProvParam(hProv, PP_SIGNATURE_PIN, (const BYTE *) pin, 0)))
-				PRINT_ERROR_AUTO(L"CryptSetProvParam(PP_SIGNATURE_PIN)");
+				PRINT_ERROR_AUTO_C("CryptSetProvParam(PP_SIGNATURE_PIN)");
 		}
 	}
 	else status = TRUE;
@@ -213,12 +213,12 @@ BOOL getCertificate(HCRYPTPROV_OR_NCRYPT_KEY_HANDLE hProv, DWORD dwKeySpec, LPCS
 		{
 			if(!(status = CryptSignAndEncodeCertificate(hProv, dwKeySpec, X509_ASN_ENCODING | PKCS_7_ASN_ENCODING, type, pvStructInfo, pSignatureAlgorithm, NULL, *Certificate, cbCertificate)))
 			{
-				PRINT_ERROR_AUTO(L"CryptSignAndEncodeCertificate (data)");
+				PRINT_ERROR_AUTO_C("CryptSignAndEncodeCertificate (data)");
 				*Certificate = (PBYTE) LocalFree(*Certificate);
 			}
 		}
 	}
-	else PRINT_ERROR_AUTO(L"CryptSignAndEncodeCertificate (init)");
+	else PRINT_ERROR_AUTO_C("CryptSignAndEncodeCertificate (init)");
 	return status;
 }
 
@@ -317,7 +317,7 @@ BOOL getFromSigner(PCCERT_CONTEXT signer, PKIWI_SIGNER dSigner, HCRYPTPROV_OR_NC
 			if(!status)
 				closeHprov(*bFreeSignerKey, *dwSignerKeySpec, *hSigner);
 		}
-		else PRINT_ERROR_AUTO(L"CryptAcquireCertificatePrivateKey(signer)");
+		else PRINT_ERROR_AUTO_C("CryptAcquireCertificatePrivateKey(signer)");
 	}
 	else if(dSigner)
 	{
@@ -503,7 +503,7 @@ BOOL generateCertificate(PKIWI_KEY_INFO ki, PKIWI_CERT_INFO ci, PCCERT_CONTEXT s
 												kprintf(L"[s.key ] cert.assoc: ");
 												if(CryptSetKeyParam(hKey, KP_CERTIFICATE, *Certificate, 0))
 													kprintf(L"OK\n");
-												else PRINT_ERROR_AUTO(L"CryptSetKeyParam(KP_CERTIFICATE)");
+												else PRINT_ERROR_AUTO_C("CryptSetKeyParam(KP_CERTIFICATE)");
 											}
 											if(oSigner)
 											{
@@ -528,11 +528,11 @@ BOOL generateCertificate(PKIWI_KEY_INFO ki, PKIWI_CERT_INFO ci, PCCERT_CONTEXT s
 								}
 								CryptDestroyKey(hKey);
 							}
-							else PRINT_ERROR_AUTO(L"CryptGenKey");
+							else PRINT_ERROR_AUTO_C("CryptGenKey");
 							if(!status)
 								CryptReleaseContext(ki->hProv, 0);
 						}
-						else PRINT_ERROR_AUTO(L"CryptAcquireContext(CRYPT_NEWKEYSET)");
+						else PRINT_ERROR_AUTO_C("CryptAcquireContext(CRYPT_NEWKEYSET)");
 						if(!status)
 							LocalFree(ki->keyInfos.pwszContainerName);
 					}
@@ -641,16 +641,16 @@ NTSTATUS kuhl_m_crypto_c_sc_auth(int argc, wchar_t * argv[])
 								kuhl_m_crypto_c_sc_auth_Ext_Free(ci.cdp);
 							kuhl_m_crypto_c_sc_auth_Ext_Free(&san);
 						}
-						else PRINT_ERROR_AUTO(L"Unable to generate SAN extension - kuhl_m_crypto_c_sc_auth_Ext_AltUPN");
+						else PRINT_ERROR_AUTO_C("Unable to generate SAN extension - kuhl_m_crypto_c_sc_auth_Ext_AltUPN");
 						kuhl_m_crypto_c_sc_auth_Ext_Free(&eku);
 					}
-					else PRINT_ERROR_AUTO(L"Unable to generate EKU extension - kuhl_m_crypto_c_sc_auth_Ext_EKU");
+					else PRINT_ERROR_AUTO_C("Unable to generate EKU extension - kuhl_m_crypto_c_sc_auth_Ext_EKU");
 					CertFreeCertificateContext(pCertCtxCA);
 				}
-				else PRINT_ERROR_AUTO(L"CertFindCertificateInStore");
+				else PRINT_ERROR_AUTO_C("CertFindCertificateInStore");
 				CertCloseStore(hCertStoreCA, CERT_CLOSE_STORE_FORCE_FLAG);
 			}
-			else PRINT_ERROR_AUTO(L"CertOpenStore");
+			else PRINT_ERROR_AUTO_C("CertOpenStore");
 		}
 		else PRINT_ERROR(L"/upn:user@domain.local needed\n");
 	}

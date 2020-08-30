@@ -39,19 +39,19 @@ BOOL kull_m_token_CheckTokenMembership(__in_opt HANDLE TokenHandle, __in PSID Si
 		{
 			isDupp = DuplicateTokenEx(TokenHandle, TOKEN_QUERY, NULL, SecurityIdentification, TokenImpersonation, &effHandle);
 			if(!isDupp)
-				PRINT_ERROR_AUTO(L"DuplicateTokenEx");
+				PRINT_ERROR_AUTO_C("DuplicateTokenEx");
 		}
 		else effHandle = TokenHandle;
 		
 		if(isDupp || (type != TokenPrimary))
 		{
 			if(!(status = CheckTokenMembership(effHandle, SidToCheck, IsMember)))
-				PRINT_ERROR_AUTO(L"CheckTokenMembership");
+				PRINT_ERROR_AUTO_C("CheckTokenMembership");
 			if(isDupp)
 				CloseHandle(effHandle);
 		}
 	}
-	else PRINT_ERROR_AUTO(L"GetTokenInformation");
+	else PRINT_ERROR_AUTO_C("GetTokenInformation");
 	return status;
 }
 
@@ -154,14 +154,14 @@ BOOL CALLBACK kull_m_token_getTokensUnique_callback(HANDLE hToken, DWORD ptid, P
 			{
 				old->next->ptid = ptid;
 				if(!DuplicateHandle(my, hToken, (HANDLE) my, &old->next->hToken, 0, FALSE, DUPLICATE_SAME_ACCESS))
-					PRINT_ERROR_AUTO(L"DuplicateHandle");
+					PRINT_ERROR_AUTO_C("DuplicateHandle");
 			}
 	}
 	else
 	{
 		list->ptid = ptid;
 		if(!DuplicateHandle(my, hToken, my, &list->hToken, 0, FALSE, DUPLICATE_SAME_ACCESS))
-		PRINT_ERROR_AUTO(L"DuplicateHandle");
+		PRINT_ERROR_AUTO_C("DuplicateHandle");
 	}
 	return TRUE;
 }

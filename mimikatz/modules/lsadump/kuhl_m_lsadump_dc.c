@@ -1485,10 +1485,10 @@ BOOL kuhl_m_lsadump_dcshadow_build_replication_value_sid(ATTRVAL* pVal, PWSTR sz
 		pVal->valLen = GetLengthSid(pSid);
 		if(pVal->pVal = (PBYTE) MIDL_user_allocate(pVal->valLen))
 			RtlCopyMemory(pVal->pVal, pSid, pVal->valLen);
-		else PRINT_ERROR_AUTO(L"LocalAlloc");
+		else PRINT_ERROR_AUTO_C("LocalAlloc");
 		LocalFree(pSid);
 	}
-	else PRINT_ERROR_AUTO(L"ConvertStringSidToSid");
+	else PRINT_ERROR_AUTO_C("ConvertStringSidToSid");
 	return pVal->pVal != NULL;
 }
 
@@ -1532,7 +1532,7 @@ BOOL kuhl_m_lsadump_dcshadow_build_replication_value_octet_string(ATTRVAL* pVal,
 			return FALSE;
 		if(kull_m_string_stringToHex(szValue, pVal->pVal, pVal->valLen))
 			return TRUE;
-		PRINT_ERROR_AUTO(L"kull_m_string_stringToHex");
+		PRINT_ERROR_AUTO_C("kull_m_string_stringToHex");
 	}
 	return FALSE;
 }
@@ -1550,7 +1550,7 @@ BOOL kuhl_m_lsadump_dcshadow_build_replication_value_security_descriptor(ATTRVAL
 			RtlCopyMemory(pVal->pVal, sddl, pVal->valLen);
 		LocalFree(sddl);
 	}
-	else PRINT_ERROR_AUTO(L"ConvertStringSecurityDescriptorToSecurityDescriptor");
+	else PRINT_ERROR_AUTO_C("ConvertStringSecurityDescriptorToSecurityDescriptor");
 	return pVal->pVal != NULL;
 }
 
@@ -1568,7 +1568,7 @@ BOOL kuhl_m_lsadump_dcshadow_build_replication_value_date(ATTRVAL* pVal, PWSTR s
 		if(pVal->pVal)
 			RtlCopyMemory(pVal->pVal, &dstime, sizeof(DSTIME));
 	}
-	else PRINT_ERROR_AUTO(L"kull_m_string_stringToFileTime");
+	else PRINT_ERROR_AUTO_C("kull_m_string_stringToFileTime");
 	return pVal->pVal != NULL;
 }
 
@@ -1839,7 +1839,7 @@ BOOL kuhl_m_lsadump_dcshadow_build_replication_value_supplementalCredentials_val
 				else
 				{
 					*aes256 = (PBYTE) LocalFree(*aes256);
-					PRINT_ERROR_AUTO(L"kull_m_string_copy");
+					PRINT_ERROR_AUTO_C("kull_m_string_copy");
 				}
 			}
 		}

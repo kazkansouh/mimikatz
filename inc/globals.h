@@ -29,7 +29,7 @@
 	#define MIMIKATZ_ARCH L"x86"
 #endif
 
-#define MIMIKATZ				L"mimikatz"
+#define MIMIKATZ				L"m1mikatz"
 #define MIMIKATZ_VERSION		L"2.2.0"
 #define MIMIKATZ_CODENAME		L"A La Vie, A L\'Amour"
 #define MIMIKATZ_MAX_WINBUILD	L"19041"
@@ -62,6 +62,7 @@
 
 #if !defined(PRINT_ERROR_AUTO)
 #define PRINT_ERROR_AUTO(func) (kprintf(L"ERROR " TEXT(__FUNCTION__) L" ; " func L" (0x%08x)\n", GetLastError()))
+#define PRINT_ERROR_AUTO_C(func) (kprintf(L"ERROR %hs ; %hs (0x%08x)\n", __FUNCTION__, func, GetLastError()))
 #endif
 
 #if !defined(W00T)

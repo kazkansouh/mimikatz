@@ -66,7 +66,7 @@ NTSTATUS kuhl_m_dpapi_keys_capi(int argc, wchar_t * argv[])
 			}
 			LocalFree(file);
 		}
-		else PRINT_ERROR_AUTO(L"kull_m_file_readData");
+		else PRINT_ERROR_AUTO_C("kull_m_file_readData");
 	}
 	else PRINT_ERROR(L"Input CAPI private key file needed (/in:file)\n");
 
@@ -142,7 +142,7 @@ NTSTATUS kuhl_m_dpapi_keys_cng(int argc, wchar_t * argv[])
 			}
 			LocalFree(file);
 		}
-		else PRINT_ERROR_AUTO(L"kull_m_file_readData");
+		else PRINT_ERROR_AUTO_C("kull_m_file_readData");
 	}
 	else PRINT_ERROR(L"Input CNG private key file needed (/in:file)\n");
 
@@ -196,7 +196,7 @@ NTSTATUS kuhl_m_dpapi_keys_tpm(int argc, wchar_t * argv[])
 			else PRINT_ERROR(L"Bad size\n");
 			LocalFree(file);
 		}
-		else PRINT_ERROR_AUTO(L"kull_m_file_readData");
+		else PRINT_ERROR_AUTO_C("kull_m_file_readData");
 	}
 	else PRINT_ERROR(L"Input TPM PCP key file needed (/in:file)\n");
 	return STATUS_SUCCESS;

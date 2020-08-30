@@ -106,13 +106,13 @@ BOOL kull_m_patch_genericProcessOrServiceFromBuild(PKULL_M_PATCH_GENERIC generic
 							if(result = kull_m_patch(&sMemory, &aPatternMemory, currenReferences->Search.Length, &aPatchMemory, currenReferences->Patch.Length, currenReferences->Offsets.off0, NULL, 0, NULL, NULL))
 								kprintf(L"\"%s\" service patched\n", processOrService);
 							else
-								PRINT_ERROR_AUTO(L"kull_m_patch");
-						} else PRINT_ERROR_AUTO(L"kull_m_process_getVeryBasicModuleInformationsForName");
+								PRINT_ERROR_AUTO_C("kull_m_patch");
+						} else PRINT_ERROR_AUTO_C("kull_m_process_getVeryBasicModuleInformationsForName");
 						kull_m_memory_close(hMemory);
 					}
-				} else PRINT_ERROR_AUTO(L"OpenProcess");
+				} else PRINT_ERROR_AUTO_C("OpenProcess");
 			} else PRINT_ERROR(L"Service is not running\n");
-		} else PRINT_ERROR_AUTO(L"kull_m_service_getUniqueForName");
+		} else PRINT_ERROR_AUTO_C("kull_m_service_getUniqueForName");
 	} else PRINT_ERROR(L"Incorrect version in references\n");
 
 	return result;

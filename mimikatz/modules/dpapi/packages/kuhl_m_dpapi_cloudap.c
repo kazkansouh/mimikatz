@@ -428,7 +428,7 @@ NTSTATUS kuhl_m_dpapi_cloudap_fromreg(int argc, wchar_t * argv[])
 			}
 			kull_m_registry_RegCloseKey(hRegistry, hKeyStorage);
 		}
-		else PRINT_ERROR_AUTO(L"kull_m_registry_RegOpenKeyEx");
+		else PRINT_ERROR_AUTO_C("kull_m_registry_RegOpenKeyEx");
 		kull_m_registry_close(hRegistry);
 	}
 	return STATUS_SUCCESS;

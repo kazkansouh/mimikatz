@@ -11,14 +11,14 @@ typedef NTSTATUS (* PKUHL_M_C_FUNC_INIT) ();
 
 typedef struct _KUHL_M_C {
 	const PKUHL_M_C_FUNC pCommand;
-	const wchar_t * command;
-	const wchar_t * description;
+	const char * command;
+	const char * description;
 } KUHL_M_C, *PKUHL_M_C;
 
 typedef struct _KUHL_M {
 	const wchar_t * shortName;
 	const wchar_t * fullName;
-	const wchar_t * description;
+	const char * description;
 	const unsigned short nbCommands;
 	const KUHL_M_C * commands;
 	const PKUHL_M_C_FUNC_INIT pInit;

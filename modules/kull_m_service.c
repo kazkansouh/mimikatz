@@ -156,11 +156,11 @@ BOOL kull_m_service_install(PCWSTR serviceName, PCWSTR displayName, PCWSTR binPa
 					kprintf(L"[+] \'%s\' service successfully registered\n", serviceName);
 					if(status = kull_m_service_addWorldToSD(hS))
 						kprintf(L"[+] \'%s\' service ACL to everyone\n", serviceName);
-					else PRINT_ERROR_AUTO(L"kull_m_service_addWorldToSD");
+					else PRINT_ERROR_AUTO_C("kull_m_service_addWorldToSD");
 				}
-				else PRINT_ERROR_AUTO(L"CreateService");
+				else PRINT_ERROR_AUTO_C("CreateService");
 			}
-			else PRINT_ERROR_AUTO(L"OpenService");
+			else PRINT_ERROR_AUTO_C("OpenService");
 		}
 		if(hS)
 		{
@@ -170,13 +170,13 @@ BOOL kull_m_service_install(PCWSTR serviceName, PCWSTR displayName, PCWSTR binPa
 					kprintf(L"[+] \'%s\' service started\n", serviceName);
 				else if(GetLastError() == ERROR_SERVICE_ALREADY_RUNNING)
 					kprintf(L"[*] \'%s\' service already started\n", serviceName);
-				else PRINT_ERROR_AUTO(L"StartService");
+				else PRINT_ERROR_AUTO_C("StartService");
 			}
 			CloseServiceHandle(hS);
 		}
 		CloseServiceHandle(hSC);
 	}
-	else PRINT_ERROR_AUTO(L"OpenSCManager(create)");
+	else PRINT_ERROR_AUTO_C("OpenSCManager(create)");
 	return status;
 }
 
@@ -190,14 +190,14 @@ BOOL kull_m_service_uninstall(PCWSTR serviceName)
 	else
 	{
 		toRemove = FALSE;
-		PRINT_ERROR_AUTO(L"kull_m_service_stop");
+		PRINT_ERROR_AUTO_C("kull_m_service_stop");
 	}
 
 	if(toRemove)
 	{
 		if(status = kull_m_service_remove(serviceName))
 			kprintf(L"[+] \'%s\' service removed\n", serviceName);
-		else PRINT_ERROR_AUTO(L"kull_m_service_remove");
+		else PRINT_ERROR_AUTO_C("kull_m_service_remove");
 	}
 	return STATUS_SUCCESS;
 }

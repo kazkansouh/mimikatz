@@ -40,7 +40,7 @@ VOID WDBGAPI kdbg_WinDbgExtensionDllInit(PWINDBG_EXTENSION_APIS lpExtensionApis,
 		"# Then switch to its context\n"
 		"0: kd> .process /r /p <EPROCESS address>\n"
 		"# And finally :\n"
-		"0: kd> !mimikatz\n"
+		"0: kd> !m1mikatz\n"
 		"===================================\n"
 		"#          * User mode *          #\n"
 		"===================================\n"

@@ -6,16 +6,16 @@
 #include "kuhl_m_privilege.h"
 
 const KUHL_M_C kuhl_m_c_privilege[] = {
-	{kuhl_m_privilege_debug,		L"debug",		L"Ask debug privilege"},
-	{kuhl_m_privilege_driver,		L"driver",		L"Ask load driver privilege"},
-	{kuhl_m_privilege_security,		L"security",	L"Ask security privilege"},
-	{kuhl_m_privilege_tcb,			L"tcb",			L"Ask tcb privilege"},
-	{kuhl_m_privilege_backup,		L"backup",		L"Ask backup privilege"},
-	{kuhl_m_privilege_restore,		L"restore",		L"Ask restore privilege"},
-	{kuhl_m_privilege_sysenv,		L"sysenv",		L"Ask system environment privilege"},
+	{kuhl_m_privilege_debug,		"debug",		"Ask debug privilege"},
+	{kuhl_m_privilege_driver,		"driver",		"Ask load driver privilege"},
+	{kuhl_m_privilege_security,		"security",	"Ask security privilege"},
+	{kuhl_m_privilege_tcb,			"tcb",			"Ask tcb privilege"},
+	{kuhl_m_privilege_backup,		"backup",		"Ask backup privilege"},
+	{kuhl_m_privilege_restore,		"restore",		"Ask restore privilege"},
+	{kuhl_m_privilege_sysenv,		"sysenv",		"Ask system environment privilege"},
 
-	{kuhl_m_privilege_id,			L"id",			L"Ask a privilege by its id"},
-	{kuhl_m_privilege_name,			L"name",		L"Ask a privilege by its name"},
+	{kuhl_m_privilege_id,			"id",			"Ask a privilege by its id"},
+	{kuhl_m_privilege_name,			"name",		"Ask a privilege by its name"},
 };
 
 const KUHL_M kuhl_m_privilege = {
@@ -54,7 +54,7 @@ NTSTATUS kuhl_m_privilege_name(int argc, wchar_t * argv[])
 				status = kuhl_m_privilege_simple(luid.LowPart);
 			else PRINT_ERROR(L"LUID high part is %u\n", luid.HighPart);
 		}
-		else PRINT_ERROR_AUTO(L"LookupPrivilegeValue");
+		else PRINT_ERROR_AUTO_C("LookupPrivilegeValue");
 	}
 	else PRINT_ERROR(L"Missing \'name\'\n");
 	return status;

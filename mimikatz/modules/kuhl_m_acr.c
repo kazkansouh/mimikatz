@@ -6,11 +6,11 @@
 #include "kuhl_m_acr.h"
 
 const KUHL_M_C kuhl_m_c_acr[] = {
-	{kuhl_m_acr_open,			L"open",		L""},
-	{kuhl_m_acr_close,			L"close",		L""},
+	{kuhl_m_acr_open,			"open",		""},
+	{kuhl_m_acr_close,			"close",		""},
 	
-	{kuhl_m_acr_firmware,		L"firmware",		L""},
-	{kuhl_m_acr_info,			L"info",		L""},
+	{kuhl_m_acr_firmware,		"firmware",		""},
+	{kuhl_m_acr_info,			"info",		""},
 };
 
 const KUHL_M kuhl_m_acr = {

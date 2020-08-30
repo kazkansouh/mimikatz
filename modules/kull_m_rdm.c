@@ -138,9 +138,9 @@ BOOL rdm_send_receive(HANDLE hFile, BYTE ctl, LPCVOID in, BYTE szIn, LPBYTE *out
 				}
 				else PRINT_ERROR(L"Bad HID header (0x%02x)\n", data[0]);
 			}
-			else PRINT_ERROR_AUTO(L"HidD_GetFeature");
+			else PRINT_ERROR_AUTO_C("HidD_GetFeature");
 		}
-		else PRINT_ERROR_AUTO(L"HidD_SetFeature");
+		else PRINT_ERROR_AUTO_C("HidD_SetFeature");
 	}
 	else PRINT_ERROR(L"Size >= 242 (%hhu)\n", szIn);
 	return status;
@@ -208,7 +208,7 @@ BOOL rdm_devices_get(PRDM_DEVICE *devices, DWORD *count)
 											else
 											{
 												if(GetLastError() != ERROR_ACCESS_DENIED)
-													PRINT_ERROR_AUTO(L"CreateFile (hDevice)");
+													PRINT_ERROR_AUTO_C("CreateFile (hDevice)");
 												*next = (PRDM_DEVICE) LocalFree(*next);
 											}
 										}
@@ -216,7 +216,7 @@ BOOL rdm_devices_get(PRDM_DEVICE *devices, DWORD *count)
 								}
 								CloseHandle(deviceHandle);
 							}
-							else PRINT_ERROR_AUTO(L"CreateFile (deviceHandle)");
+							else PRINT_ERROR_AUTO_C("CreateFile (deviceHandle)");
 						}
 						LocalFree(DeviceInterfaceDetailData);
 					}
@@ -225,7 +225,7 @@ BOOL rdm_devices_get(PRDM_DEVICE *devices, DWORD *count)
 		}
 		SetupDiDestroyDeviceInfoList(hDevInfo);
 	}
-	else PRINT_ERROR_AUTO(L"SetupDiGetClassDevs");
+	else PRINT_ERROR_AUTO_C("SetupDiGetClassDevs");
 
 	if(count)
 		*count = id;

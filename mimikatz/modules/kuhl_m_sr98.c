@@ -6,14 +6,14 @@
 #include "kuhl_m_sr98.h"
 
 const KUHL_M_C kuhl_m_c_sr98[] = {
-	{kuhl_m_sr98_beep,		L"beep",	NULL},
-	{kuhl_m_sr98_raw,		L"raw",		NULL},
-	{kuhl_m_sr98_b0,		L"b0",		NULL},
-	{kuhl_m_sr98_list,		L"list",	NULL},
-	{kuhl_m_sr98_hid26,		L"hid",		NULL},
-	{kuhl_m_sr98_em4100,	L"em4100",	NULL},
-	{kuhl_m_sr98_noralsy,	L"noralsy",	NULL},
-	{kuhl_m_sr98_nedap,		L"nedap",	NULL},
+	{kuhl_m_sr98_beep,		"beep",	NULL},
+	{kuhl_m_sr98_raw,		"raw",		NULL},
+	{kuhl_m_sr98_b0,		"b0",		NULL},
+	{kuhl_m_sr98_list,		"list",	NULL},
+	{kuhl_m_sr98_hid26,		"hid",		NULL},
+	{kuhl_m_sr98_em4100,	"em4100",	NULL},
+	{kuhl_m_sr98_noralsy,	"noralsy",	NULL},
+	{kuhl_m_sr98_nedap,		"nedap",	NULL},
 };
 const KUHL_M kuhl_m_sr98 = {
 	L"sr98", L"RF module for SR98 device and T5577 target", NULL,

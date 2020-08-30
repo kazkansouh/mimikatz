@@ -555,14 +555,14 @@ BOOL kull_m_dpapi_unprotect_blob(PKULL_M_DPAPI_BLOB blob, LPCVOID masterkey, DWO
 								if(!status)
 								{
 									*dataOut = LocalFree(*dataOut);	
-									PRINT_ERROR_AUTO(L"CryptDecrypt");
+									PRINT_ERROR_AUTO_C("CryptDecrypt");
 								}
 							}
 							CryptDestroyKey(hSessionKey);
 							if(!kull_m_crypto_close_hprov_delete_container(hSessionProv))
-								PRINT_ERROR_AUTO(L"kull_m_crypto_close_hprov_delete_container");
+								PRINT_ERROR_AUTO_C("kull_m_crypto_close_hprov_delete_container");
 						}
-						else PRINT_ERROR_AUTO(L"kull_m_crypto_hkey_session");
+						else PRINT_ERROR_AUTO_C("kull_m_crypto_hkey_session");
 					}
 					LocalFree(key);
 				}
@@ -716,9 +716,9 @@ BOOL kull_m_dpapi_unprotect_masterkey_with_shaDerivedkey(PKULL_M_DPAPI_MASTERKEY
 				}
 				CryptDestroyKey(hSessionKey);
 				if(!kull_m_crypto_close_hprov_delete_container(hSessionProv))
-					PRINT_ERROR_AUTO(L"kull_m_crypto_close_hprov_delete_container");
+					PRINT_ERROR_AUTO_C("kull_m_crypto_close_hprov_delete_container");
 			}
-			else PRINT_ERROR_AUTO(L"kull_m_crypto_hkey_session");
+			else PRINT_ERROR_AUTO_C("kull_m_crypto_hkey_session");
 		}
 		LocalFree(HMACHash);
 	}
@@ -807,13 +807,13 @@ BOOL kull_m_dpapi_protect_masterkey_with_shaDerivedkey(PKULL_M_DPAPI_MASTERKEY m
 							{
 								if(status = CryptEncrypt(hSessionKey, 0, TRUE, 0, masterkey->pbKey, &masterkey->__dwKeyLen, masterkey->__dwKeyLen + BlockLen))
 									masterkey->__dwKeyLen -= BlockLen;
-								else PRINT_ERROR_AUTO(L"CryptEncrypt");
+								else PRINT_ERROR_AUTO_C("CryptEncrypt");
 							}
 							CryptDestroyKey(hSessionKey);
 							if(!kull_m_crypto_close_hprov_delete_container(hSessionProv))
-								PRINT_ERROR_AUTO(L"kull_m_crypto_close_hprov_delete_container");
+								PRINT_ERROR_AUTO_C("kull_m_crypto_close_hprov_delete_container");
 						}
-						else PRINT_ERROR_AUTO(L"kull_m_crypto_hkey_session");
+						else PRINT_ERROR_AUTO_C("kull_m_crypto_hkey_session");
 					}
 					LocalFree(HMACHash);
 				}
@@ -938,17 +938,17 @@ BOOL kull_m_dpapi_unprotect_domainkey_with_key(PKULL_M_DPAPI_MASTERKEY_DOMAINKEY
 										}
 									}
 								}
-								else PRINT_ERROR_AUTO(L"CryptDecrypt");
+								else PRINT_ERROR_AUTO_C("CryptDecrypt");
 								LocalFree(des_buffer);
 							}
 						}
-						else PRINT_ERROR_AUTO(L"CryptSetKeyParam");
+						else PRINT_ERROR_AUTO_C("CryptSetKeyParam");
 						CryptDestroyKey(hSessionKey);
 						if(!kull_m_crypto_close_hprov_delete_container(hSessionProv))
-							PRINT_ERROR_AUTO(L"kull_m_crypto_close_hprov_delete_container");
+							PRINT_ERROR_AUTO_C("kull_m_crypto_close_hprov_delete_container");
 					}
 				}
-				else PRINT_ERROR_AUTO(L"CryptDecrypt");
+				else PRINT_ERROR_AUTO_C("CryptDecrypt");
 				LocalFree(rsa_buffer);
 			}
 			CryptDestroyKey(hKey);
@@ -1017,9 +1017,9 @@ BOOL kull_m_dpapi_unprotect_credhist_entry_with_shaDerivedkey(PKULL_M_DPAPI_CRED
 				}
 				CryptDestroyKey(hSessionKey);
 				if(!kull_m_crypto_close_hprov_delete_container(hSessionProv))
-					PRINT_ERROR_AUTO(L"kull_m_crypto_close_hprov_delete_container");
+					PRINT_ERROR_AUTO_C("kull_m_crypto_close_hprov_delete_container");
 			}
-			else PRINT_ERROR_AUTO(L"kull_m_crypto_hkey_session");
+			else PRINT_ERROR_AUTO_C("kull_m_crypto_hkey_session");
 		}
 		LocalFree(HMACHash);
 	}

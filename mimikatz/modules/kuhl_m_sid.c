@@ -6,13 +6,13 @@ Licence : https://creativecommons.org/licenses/by/4.0/
 #include "kuhl_m_sid.h"
 
 const KUHL_M_C kuhl_m_c_sid[] = {
-	{kuhl_m_sid_lookup,		L"lookup",			L"Name or SID lookup"},
-	{kuhl_m_sid_query,		L"query",			L"Query object by SID or name"},
+	{kuhl_m_sid_lookup,		"lookup",			"Name or SID lookup"},
+	{kuhl_m_sid_query,		"query",			"Query object by SID or name"},
 #if defined(_M_X64)
-	{kuhl_m_sid_modify,		L"modify",			L"Modify object SID of an object"},
-	{kuhl_m_sid_add,		L"add",				L"Add a SID to sIDHistory of an object"},
-	{kuhl_m_sid_clear,		L"clear",			L"Clear sIDHistory of an object"},
-	{kuhl_m_sid_patch,		L"patch",			L"Patch NTDS Service"},
+	{kuhl_m_sid_modify,		"modify",			"Modify object SID of an object"},
+	{kuhl_m_sid_add,		"add",				"Add a SID to sIDHistory of an object"},
+	{kuhl_m_sid_clear,		"clear",			"Clear sIDHistory of an object"},
+	{kuhl_m_sid_patch,		"patch",			"Patch NTDS Service"},
 #endif
 };
 const KUHL_M kuhl_m_sid = {
@@ -43,12 +43,12 @@ NTSTATUS kuhl_m_sid_lookup(int argc, wchar_t * argv[])
 					LocalFree(name);
 					LocalFree(domain);
 				}
-				else PRINT_ERROR_AUTO(L"kull_m_token_getNameDomainFromSID");
+				else PRINT_ERROR_AUTO_C("kull_m_token_getNameDomainFromSID");
 			}
 			else PRINT_ERROR(L"Invalid SID\n");
 			LocalFree(pSid);
 		}
-		else PRINT_ERROR_AUTO(L"ConvertStringSidToSid");
+		else PRINT_ERROR_AUTO_C("ConvertStringSidToSid");
 	}
 	else if(kull_m_string_args_byName(argc, argv, L"name", &szName, NULL))
 	{
@@ -63,7 +63,7 @@ NTSTATUS kuhl_m_sid_lookup(int argc, wchar_t * argv[])
 			LocalFree(pSid);
 			LocalFree(domain);
 		}
-		else PRINT_ERROR_AUTO(L"kull_m_token_getSidDomainFromName");
+		else PRINT_ERROR_AUTO_C("kull_m_token_getSidDomainFromName");
 	}
 	else PRINT_ERROR(L"/sid or /name is missing\n");
 
@@ -122,7 +122,7 @@ NTSTATUS kuhl_m_sid_modify(int argc, wchar_t * argv[])
 			else PRINT_ERROR(L"Invalid SID\n");
 			LocalFree(NewSid.bv_val);
 		}
-		else PRINT_ERROR_AUTO(L"ConvertStringSidToSid");
+		else PRINT_ERROR_AUTO_C("ConvertStringSidToSid");
 	}
 	else PRINT_ERROR(L"/new:sid is needed");
 	return STATUS_SUCCESS;
@@ -167,7 +167,7 @@ NTSTATUS kuhl_m_sid_add(int argc, wchar_t * argv[])
 			if(domain)
 				LocalFree(domain);
 		}
-		else PRINT_ERROR_AUTO(L"ConvertStringSidToSid / kull_m_token_getSidDomainFromName");
+		else PRINT_ERROR_AUTO_C("ConvertStringSidToSid / kull_m_token_getSidDomainFromName");
 	}
 	else PRINT_ERROR(L"/new:sid or /new:resolvable_name is needed");
 	return STATUS_SUCCESS;
@@ -393,7 +393,7 @@ PWCHAR kuhl_m_sid_filterFromArgs(int argc, wchar_t * argv[])
 			else PRINT_ERROR(L"Invalid SID\n");
 			LocalFree(pSid);
 		}
-		else PRINT_ERROR_AUTO(L"ConvertStringSidToSid");
+		else PRINT_ERROR_AUTO_C("ConvertStringSidToSid");
 	}
 	else PRINT_ERROR(L"/sam or /sid to target the account is needed\n");
 	

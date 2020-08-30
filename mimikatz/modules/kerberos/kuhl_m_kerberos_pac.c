@@ -386,7 +386,7 @@ NTSTATUS kuhl_m_kerberos_pac_info(int argc, wchar_t * argv[])
 			}
 			LocalFree(pacType);
 		}
-		else PRINT_ERROR_AUTO(L"kull_m_file_readData");
+		else PRINT_ERROR_AUTO_C("kull_m_file_readData");
 	}
 	return STATUS_SUCCESS;
 }

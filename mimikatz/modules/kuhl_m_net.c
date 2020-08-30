@@ -6,19 +6,19 @@
 #include "kuhl_m_net.h"
 
 const KUHL_M_C kuhl_m_c_net[] = {
-	{kuhl_m_net_user,		L"user",		L""},
-	{kuhl_m_net_group,		L"group",		L""},
-	{kuhl_m_net_alias,		L"alias",		L""},
-	//{kuhl_m_net_autoda,		L"autoda",		L""},
-	{kuhl_m_net_session,	L"session",		L""},
-	{kuhl_m_net_wsession,	L"wsession",	L""},
-	{kuhl_m_net_tod,		L"tod",	L""},
-	{kuhl_m_net_stats,		L"stats", L""},
-	{kuhl_m_net_share,		L"share", L""},
-	{kuhl_m_net_serverinfo,	L"serverinfo", L""},
-	{kuhl_m_net_trust,		L"trust", L""},
-	{kuhl_m_net_deleg,		L"deleg", L""},
-	{kuhl_m_net_dcom_if,	L"if", L""},
+	{kuhl_m_net_user,		"user",		""},
+	{kuhl_m_net_group,		"group",		""},
+	{kuhl_m_net_alias,		"alias",		""},
+	//{kuhl_m_net_autoda,		"autoda",		""},
+	{kuhl_m_net_session,	"session",		""},
+	{kuhl_m_net_wsession,	"wsession",	""},
+	{kuhl_m_net_tod,		"tod",	""},
+	{kuhl_m_net_stats,		"stats", ""},
+	{kuhl_m_net_share,		"share", ""},
+	{kuhl_m_net_serverinfo,	"serverinfo", ""},
+	{kuhl_m_net_trust,		"trust", ""},
+	{kuhl_m_net_deleg,		"deleg", ""},
+	{kuhl_m_net_dcom_if,	"if", ""},
 };
 const KUHL_M kuhl_m_net = {
 	L"net",	L"", NULL,
@@ -363,10 +363,10 @@ NTSTATUS kuhl_m_net_autoda(int argc, wchar_t * argv[])
 				}
 				LocalFree(name);
 				
-			} else PRINT_ERROR_AUTO(L"kull_m_token_getNameDomainFromSID");
+			} else PRINT_ERROR_AUTO_C("kull_m_token_getNameDomainFromSID");
 			LocalFree(pSid);
 		}
-		else PRINT_ERROR_AUTO(L"kull_m_local_domain_user_CreateWellKnownSid");
+		else PRINT_ERROR_AUTO_C("kull_m_local_domain_user_CreateWellKnownSid");
 
 		LsaFreeMemory(pDomainInfo);
 	}

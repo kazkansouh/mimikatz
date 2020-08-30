@@ -8,22 +8,22 @@
 HMODULE kuhl_m_crypto_hRsaEnh = NULL, kuhl_m_crypto_hDssEnh = NULL;
 
 const KUHL_M_C kuhl_m_c_crypto[] = {
-	{kuhl_m_crypto_l_providers,		L"providers",		L"List cryptographic providers"},
-	{kuhl_m_crypto_l_stores,		L"stores",			L"List cryptographic stores"},
-	{kuhl_m_crypto_l_certificates,	L"certificates",	L"List (or export) certificates"},
-	{kuhl_m_crypto_l_keys,			L"keys",			L"List (or export) keys containers"},
-	{kuhl_m_crypto_l_sc,			L"sc",				L"List smartcard readers"},
-	{kuhl_m_crypto_hash,			L"hash",			L"Hash a password with optional username"},
-	{kuhl_m_crypto_system,			L"system",			L"Describe a Windows System Certificate (file, TODO:registry or hive)"},
-	{kuhl_m_crypto_c_sc_auth,		L"scauth",			L"Create a authentication certitifate (smartcard like) from a CA"},
-	{kuhl_m_crypto_c_cert_to_hw,	L"certtohw",		L"Try to export a software CA to a crypto (virtual)hardware"},
+	{kuhl_m_crypto_l_providers,		"providers",		"List cryptographic providers"},
+	{kuhl_m_crypto_l_stores,		"stores",			"List cryptographic stores"},
+	{kuhl_m_crypto_l_certificates,	"certificates",	"List (or export) certificates"},
+	{kuhl_m_crypto_l_keys,			"keys",			"List (or export) keys containers"},
+	{kuhl_m_crypto_l_sc,			"sc",				"List smartcard readers"},
+	{kuhl_m_crypto_hash,			"hash",			"Hash a password with optional username"},
+	{kuhl_m_crypto_system,			"system",			"Describe a Windows System Certificate (file, TODO:registry or hive)"},
+	{kuhl_m_crypto_c_sc_auth,		"scauth",			"Create a authentication certitifate (smartcard like) from a CA"},
+	{kuhl_m_crypto_c_cert_to_hw,	"certtohw",		"Try to export a software CA to a crypto (virtual)hardware"},
 
-	{kuhl_m_crypto_p_capi,			L"capi",			L"[experimental] Patch CryptoAPI layer for easy export"},
-	{kuhl_m_crypto_p_cng,			L"cng",				L"[experimental] Patch CNG service for easy export"},
+	{kuhl_m_crypto_p_capi,			"capi",			"[experimental] Patch CryptoAPI layer for easy export"},
+	{kuhl_m_crypto_p_cng,			"cng",				"[experimental] Patch CNG service for easy export"},
 
-	{kuhl_m_crypto_extract,			L"extract",			L"[experimental] Extract keys from CAPI RSA/AES provider"},
-	{kuhl_m_crypto_keyutil,			L"kutil",			NULL},
-	{kuhl_m_crypto_platforminfo,	L"tpminfo",			NULL},
+	{kuhl_m_crypto_extract,			"extract",			"[experimental] Extract keys from CAPI RSA/AES provider"},
+	{kuhl_m_crypto_keyutil,			"kutil",			NULL},
+	{kuhl_m_crypto_platforminfo,	"tpminfo",			NULL},
 };
 
 const KUHL_M kuhl_m_crypto = {
@@ -84,7 +84,7 @@ NTSTATUS kuhl_m_crypto_l_providers(int argc, wchar_t * argv[])
 		index++;
 	}
 	if(GetLastError() != ERROR_NO_MORE_ITEMS)
-		PRINT_ERROR_AUTO(L"CryptEnumProviders");
+		PRINT_ERROR_AUTO_C("CryptEnumProviders");
 
 	index = 0;
 	kprintf(L"\nCryptoAPI provider types:\n");
@@ -102,7 +102,7 @@ NTSTATUS kuhl_m_crypto_l_providers(int argc, wchar_t * argv[])
 		index++;
 	}
 	if(GetLastError() != ERROR_NO_MORE_ITEMS)
-		PRINT_ERROR_AUTO(L"CryptEnumProviderTypes");
+		PRINT_ERROR_AUTO_C("CryptEnumProviderTypes");
 
 	kprintf(L"\nCNG providers :\n");
 	__try 
@@ -113,7 +113,7 @@ NTSTATUS kuhl_m_crypto_l_providers(int argc, wchar_t * argv[])
 				kprintf(L"%2u. %s\n", index, pBuffer->rgpszProviders[index]);
 			BCryptFreeBuffer(pBuffer);
 		}
-		else PRINT_ERROR_AUTO(L"BCryptEnumRegisteredProviders");
+		else PRINT_ERROR_AUTO_C("BCryptEnumRegisteredProviders");
 	}
 	__except(GetExceptionCode() == ERROR_DLL_NOT_FOUND){}
 
@@ -129,7 +129,7 @@ NTSTATUS kuhl_m_crypto_l_stores(int argc, wchar_t * argv[])
 	kprintf(L"Asking for System Store \'%s\' (0x%08x)\n", szSystemStore, dwSystemStore);
 
 	if(!CertEnumSystemStore(dwSystemStore, NULL, &nbStore, kuhl_m_crypto_l_stores_enumCallback_print))
-		PRINT_ERROR_AUTO(L"CertEnumSystemStore");
+		PRINT_ERROR_AUTO_C("CertEnumSystemStore");
 
 	return STATUS_SUCCESS;
 }
@@ -186,7 +186,7 @@ void kuhl_m_crypto_certificate_descr(PCCERT_CONTEXT pCertContext)
 		kull_m_string_wprintf_hex(sha1, cbSha1, 0);
 		kprintf(L"\n");
 	}
-	else PRINT_ERROR_AUTO(L"CertGetCertificateContextProperty(SHA1)");
+	else PRINT_ERROR_AUTO_C("CertGetCertificateContextProperty(SHA1)");
 }
 
 const DWORD nameSrc[] = {CERT_NAME_FRIENDLY_DISPLAY_TYPE, CERT_NAME_DNS_TYPE, CERT_NAME_EMAIL_TYPE, CERT_NAME_UPN_TYPE, CERT_NAME_URL_TYPE};
@@ -262,7 +262,7 @@ NTSTATUS kuhl_m_crypto_l_certificates(int argc, wchar_t * argv[])
 														kuhl_m_crypto_printKeyInfos(0, maCle, monProv);
 														CryptDestroyKey(maCle);
 													}
-													else PRINT_ERROR_AUTO(L"CryptGetUserKey");
+													else PRINT_ERROR_AUTO_C("CryptGetUserKey");
 													if(keyToFree)
 														CryptReleaseContext(monProv, 0);
 												}
@@ -280,10 +280,10 @@ NTSTATUS kuhl_m_crypto_l_certificates(int argc, wchar_t * argv[])
 													}
 												}
 											}
-											else PRINT_ERROR_AUTO(L"CryptAcquireCertificatePrivateKey");
+											else PRINT_ERROR_AUTO_C("CryptAcquireCertificatePrivateKey");
 										}
 									}
-									else PRINT_ERROR_AUTO(L"CertGetCertificateContextProperty");
+									else PRINT_ERROR_AUTO_C("CertGetCertificateContextProperty");
 									LocalFree(pBuffer);
 								}
 							}
@@ -291,17 +291,17 @@ NTSTATUS kuhl_m_crypto_l_certificates(int argc, wchar_t * argv[])
 								kuhl_m_crypto_exportCert(pCertContext, (BOOL) dwSizeNeeded, szSystemStore, szStore, i, certName);
 							kprintf(L"\n");
 						}
-						else PRINT_ERROR_AUTO(L"CertGetNameString");
+						else PRINT_ERROR_AUTO_C("CertGetNameString");
 						LocalFree(certName);
 					}
 					break;
 				}
-				else PRINT_ERROR_AUTO(L"CertGetNameString (for len)");
+				else PRINT_ERROR_AUTO_C("CertGetNameString (for len)");
 			}
 		}
 		CertCloseStore(hCertificateStore, CERT_CLOSE_STORE_FORCE_FLAG);
 	}
-	else PRINT_ERROR_AUTO(L"CertOpenStore");
+	else PRINT_ERROR_AUTO_C("CertOpenStore");
 
 	return STATUS_SUCCESS;
 }
@@ -352,7 +352,7 @@ void kuhl_m_crypto_l_keys_capi(LPCWSTR szContainer, LPCWSTR szProvider, DWORD dw
 										kuhl_m_crypto_exportKeyToFile(0, hCapiKey, ks, szStore, i, containerName);
 									CryptDestroyKey(hCapiKey);
 								}
-								else PRINT_ERROR_AUTO(L"CryptGetUserKey");
+								else PRINT_ERROR_AUTO_C("CryptGetUserKey");
 							}
 							LocalFree(fullContainer);
 						}
@@ -364,13 +364,13 @@ void kuhl_m_crypto_l_keys_capi(LPCWSTR szContainer, LPCWSTR szProvider, DWORD dw
 				i++;
 			}
 			if(GetLastError() != ERROR_NO_MORE_ITEMS)
-				PRINT_ERROR_AUTO(L"CryptGetProvParam");
+				PRINT_ERROR_AUTO_C("CryptGetProvParam");
 
 			CryptReleaseContext(hCryptProv, 0);
 			LocalFree(aContainerName);
 		}
 	}
-	else PRINT_ERROR_AUTO(L"CryptAcquireContext");
+	else PRINT_ERROR_AUTO_C("CryptAcquireContext");
 }
 
 void kuhl_m_crypto_l_keys_cng(LPCWSTR szContainer, LPCWSTR szProvider, DWORD dwFlags, BOOL export, LPCWSTR szStore)
@@ -567,7 +567,7 @@ void kuhl_m_crypto_exportRawKeyToFile(LPCVOID data, DWORD size, BOOL isCNG, DWOR
 		if(CryptAcquireContext(&hCapiProv, NULL, NULL, dwProviderType/*PROV_DSS_DH/* RSA_FULL*/, CRYPT_VERIFYCONTEXT))
 		{
 			if(!CryptImportKey(hCapiProv, (LPCBYTE) data, size, 0, CRYPT_EXPORTABLE, &hCapiKey))
-				PRINT_ERROR_AUTO(L"CryptImportKey");
+				PRINT_ERROR_AUTO_C("CryptImportKey");
 		}
 	}
 
@@ -591,7 +591,7 @@ void kuhl_m_crypto_exportRawKeyToFile(LPCVOID data, DWORD size, BOOL isCNG, DWOR
 			else
 			{
 				kprintf(L"KO - ");
-				PRINT_ERROR_AUTO(L"kull_m_file_writeData");
+				PRINT_ERROR_AUTO_C("kull_m_file_writeData");
 			}
 			LocalFree(filenamebuffer);
 		}
@@ -646,12 +646,12 @@ void kuhl_m_crypto_exportKeyToFile(NCRYPT_KEY_HANDLE hCngKey, HCRYPTKEY hCapiKey
 				}
 				else
 				{
-					PRINT_ERROR_AUTO(L"CryptExportKey(data)");
+					PRINT_ERROR_AUTO_C("CryptExportKey(data)");
 					pExport = (PBYTE) LocalFree(pExport);
 				}
 			}
 		}
-		else PRINT_ERROR_AUTO(L"CryptExportKey(init)");
+		else PRINT_ERROR_AUTO_C("CryptExportKey(init)");
 	}
 	else if(hCngKey)
 	{
@@ -692,7 +692,7 @@ void kuhl_m_crypto_exportKeyToFile(NCRYPT_KEY_HANDLE hCngKey, HCRYPTKEY hCapiKey
 										pExport = (PBYTE) b64Out;
 										szPVK = lstrlenA(b64Out);
 									}
-									else PRINT_ERROR_AUTO(L"kull_m_string_EncodeB64_headers");
+									else PRINT_ERROR_AUTO_C("kull_m_string_EncodeB64_headers");
 								}
 							}
 							else
@@ -716,7 +716,7 @@ void kuhl_m_crypto_exportKeyToFile(NCRYPT_KEY_HANDLE hCngKey, HCRYPTKEY hCapiKey
 		{
 			if(isExported = kull_m_file_writeData(filenamebuffer, pExport, szPVK))
 				kprintf(L"OK - \'%s\'\n", filenamebuffer);
-			else PRINT_ERROR_AUTO(L"kull_m_file_writeData");
+			else PRINT_ERROR_AUTO_C("kull_m_file_writeData");
 			LocalFree(filenamebuffer);
 		}
 		LocalFree(pExport);
@@ -735,10 +735,10 @@ void kuhl_m_crypto_exportCert(PCCERT_CONTEXT pCertificate, BOOL havePrivateKey, 
 		kprintf(L"\tPublic export  : ");
 		if(kull_m_file_writeData(fileNameBuffer, pCertificate->pbCertEncoded, pCertificate->cbCertEncoded))
 			kprintf(L"OK - \'%s\'\n", fileNameBuffer);
-		else PRINT_ERROR_AUTO(L"CreateFile");
+		else PRINT_ERROR_AUTO_C("CreateFile");
 		LocalFree(fileNameBuffer);
 	}
-	else PRINT_ERROR_AUTO(L"kuhl_m_crypto_generateFileName");
+	else PRINT_ERROR_AUTO_C("kuhl_m_crypto_generateFileName");
 	
 	if(havePrivateKey)
 	{
@@ -751,10 +751,10 @@ void kuhl_m_crypto_exportCert(PCCERT_CONTEXT pCertificate, BOOL havePrivateKey, 
 					kprintf(L"OK - \'%s\'\n", fileNameBuffer);
 				CertFreeCertificateContext(pCertContextCopy);
 			}
-			else PRINT_ERROR_AUTO(L"CertAddCertificateContextToStore");
+			else PRINT_ERROR_AUTO_C("CertAddCertificateContextToStore");
 			LocalFree(fileNameBuffer);
 		}
-		else PRINT_ERROR_AUTO(L"kuhl_m_crypto_generateFileName");
+		else PRINT_ERROR_AUTO_C("kuhl_m_crypto_generateFileName");
 	}
 	CertCloseStore(hTempStore, CERT_CLOSE_STORE_FORCE_FLAG);
 }
@@ -976,7 +976,7 @@ void kuhl_m_crypto_file_rawData(PKUHL_M_CRYPTO_CERT_PROP prop, PCWCHAR inFile, B
 				{
 					if(kull_m_file_writeData(buffer, prop->data, prop->size))
 						kprintf(L"Saved to file: %s\n", buffer);
-					else PRINT_ERROR_AUTO(L"kull_m_file_writeData");
+					else PRINT_ERROR_AUTO_C("kull_m_file_writeData");
 				}
 				LocalFree(buffer);
 			}
@@ -1035,18 +1035,18 @@ NTSTATUS kuhl_m_crypto_c_cert_to_hw(int argc, wchar_t * argv[])
 											{
 												if(!(isExported = CryptExportKey(hCapiKey, 0, PRIVATEKEYBLOB, 0, keyblob, &dwkeyblob)))
 												{
-													PRINT_ERROR_AUTO(L"CryptExportKey(data)");
+													PRINT_ERROR_AUTO_C("CryptExportKey(data)");
 													LocalFree(keyblob);
 												}
 											}
 										}
-										else PRINT_ERROR_AUTO(L"CryptExportKey(init)");
+										else PRINT_ERROR_AUTO_C("CryptExportKey(init)");
 										CryptDestroyKey(hCapiKey);
 									}
-									else PRINT_ERROR_AUTO(L"CryptGetUserKey");
+									else PRINT_ERROR_AUTO_C("CryptGetUserKey");
 									CryptReleaseContext(hCapiProv, 0);
 								}
-								else PRINT_ERROR_AUTO(L"CryptAcquireContext");
+								else PRINT_ERROR_AUTO_C("CryptAcquireContext");
 							}
 							else
 							{
@@ -1106,11 +1106,11 @@ NTSTATUS kuhl_m_crypto_c_cert_to_hw(int argc, wchar_t * argv[])
 									else
 									{
 										keyInfos.dwFlags = 0;
-										PRINT_ERROR_AUTO(L"CryptSetProvParam(PP_KEYEXCHANGE_PIN)");
+										PRINT_ERROR_AUTO_C("CryptSetProvParam(PP_KEYEXCHANGE_PIN)");
 									}
 									CryptReleaseContext(hProvCERT, 0);
 								}
-								else PRINT_ERROR_AUTO(L"CryptAcquireContext(pin)");
+								else PRINT_ERROR_AUTO_C("CryptAcquireContext(pin)");
 							}
 						}
 
@@ -1119,7 +1119,7 @@ NTSTATUS kuhl_m_crypto_c_cert_to_hw(int argc, wchar_t * argv[])
 							if(aPin)
 							{
 								if(!CryptSetProvParam(hProvCERT, PP_KEYEXCHANGE_PIN, (const BYTE *) aPin, 0))
-									PRINT_ERROR_AUTO(L"CryptSetProvParam(PP_KEYEXCHANGE_PIN)");
+									PRINT_ERROR_AUTO_C("CryptSetProvParam(PP_KEYEXCHANGE_PIN)");
 								LocalFree(aPin);
 							}
 							kprintf(L"Dst Key Import : ");
@@ -1128,22 +1128,22 @@ NTSTATUS kuhl_m_crypto_c_cert_to_hw(int argc, wchar_t * argv[])
 								kprintf(L"OK\nDst Cert Assoc : ");
 								if(isExported = CryptSetKeyParam(hKeyCERT, KP_CERTIFICATE, pCertCtx->pbCertEncoded, 0))
 									kprintf(L"OK\n");
-								else PRINT_ERROR_AUTO(L"CryptSetKeyParam");
+								else PRINT_ERROR_AUTO_C("CryptSetKeyParam");
 								CryptDestroyKey(hKeyCERT);
 							}
-							else PRINT_ERROR_AUTO(L"CryptImportKey");
+							else PRINT_ERROR_AUTO_C("CryptImportKey");
 						}
-						else PRINT_ERROR_AUTO(L"CryptAcquireContext");
+						else PRINT_ERROR_AUTO_C("CryptAcquireContext");
 						LocalFree(keyInfos.pwszContainerName);
 					}
 					LocalFree(keyblob);
 				}
 				CertFreeCertificateContext(pCertCtx);
 			}
-			else PRINT_ERROR_AUTO(L"CertFindCertificateInStore");
+			else PRINT_ERROR_AUTO_C("CertFindCertificateInStore");
 			CertCloseStore(hCertStore, CERT_CLOSE_STORE_FORCE_FLAG);
 		}
-		else PRINT_ERROR_AUTO(L"CertOpenStore");
+		else PRINT_ERROR_AUTO_C("CertOpenStore");
 	}
 	else PRINT_ERROR(L"/name:kiwi needed\n");
 
@@ -1156,13 +1156,13 @@ BOOL kuhl_m_crypto_FreeHandleCert(HCERTSTORE *hStore, PCCERT_CONTEXT *pCertConte
 	{
 		if(CertFreeCertificateContext(*pCertContext))
 			*pCertContext = NULL;
-		else PRINT_ERROR_AUTO(L"CertFreeCertificateContext");
+		else PRINT_ERROR_AUTO_C("CertFreeCertificateContext");
 	}
 	if(*hStore)
 	{
 		if(CertCloseStore(*hStore, CERT_CLOSE_STORE_FORCE_FLAG))
 			*hStore = 0;
-		else PRINT_ERROR_AUTO(L"CertCloseStore");
+		else PRINT_ERROR_AUTO_C("CertCloseStore");
 	}
 	return !(*pCertContext || *hStore);
 }
@@ -1175,14 +1175,14 @@ BOOL kuhl_m_crypto_ImportCert(LPCVOID data, DWORD dwSize, HCERTSTORE *hStore, PC
 	*hStore = 0;
 	*pCertContext = NULL;
 	if(!(status = CryptQueryObject(CERT_QUERY_OBJECT_BLOB, &blobCert, CERT_QUERY_CONTENT_FLAG_CERT, CERT_QUERY_FORMAT_FLAG_ALL, 0, &dwMsgAndCertEncodingType, &dwContentType, &dwFormatType, hStore, NULL, (const void **) pCertContext)))
-		PRINT_ERROR_AUTO(L"CryptQueryObject");
+		PRINT_ERROR_AUTO_C("CryptQueryObject");
 	//if(*hStore = CertOpenStore(CERT_STORE_PROV_MEMORY, 0, 0, CERT_STORE_CREATE_NEW_FLAG, NULL))
 	//{
 	//	if(CertAddEncodedCertificateToStore(*hStore, X509_ASN_ENCODING | PKCS_7_ASN_ENCODING, (const BYTE *) data, dwSize, CERT_STORE_ADD_NEW, pCertContext))
 	//		status = TRUE;
-	//	else PRINT_ERROR_AUTO(L"CertAddEncodedCertificateToStore");
+	//	else PRINT_ERROR_AUTO_C("CertAddEncodedCertificateToStore");
 	//}
-	//else PRINT_ERROR_AUTO(L"CertOpenStore");
+	//else PRINT_ERROR_AUTO_C("CertOpenStore");
 	//if(!status)
 	//	kuhl_m_crypto_FreeHandleCert(hStore, pCertContext);
 	return status;
@@ -1333,11 +1333,11 @@ BOOL kuhl_m_crypto_NCrypt_AutoKey(LPCVOID key, DWORD size, NCRYPT_PROV_HANDLE *h
 					}
 					else PRINT_ERROR(L"Unable to decode format\n");
 				}
-				else PRINT_ERROR_AUTO(L"CryptStringToBinaryA(data)");
+				else PRINT_ERROR_AUTO_C("CryptStringToBinaryA(data)");
 				LocalFree(bBinary);
 			}
 		}
-		else PRINT_ERROR_AUTO(L"CryptStringToBinaryA(init)");
+		else PRINT_ERROR_AUTO_C("CryptStringToBinaryA(init)");
 	}
 	return status;
 }
@@ -1362,10 +1362,10 @@ BOOL kuhl_m_crypto_keyutil_export_pkcs8_file(NCRYPT_KEY_HANDLE hNCryptKey, LPCWS
 				{
 					if(kull_m_file_writeData(szFile, aData, lstrlenA(aData)))
 							status = TRUE;
-					else PRINT_ERROR_AUTO(L"kull_m_file_writeData");
+					else PRINT_ERROR_AUTO_C("kull_m_file_writeData");
 					LocalFree(aData);
 				}
-				else PRINT_ERROR_AUTO(L"kull_m_string_EncodeB64_headers");
+				else PRINT_ERROR_AUTO_C("kull_m_string_EncodeB64_headers");
 			}
 			else PRINT_ERROR(L"NCryptExportKey(data): 0x%08x\n", nStatus);
 			LocalFree(bKey8);
@@ -1417,19 +1417,19 @@ NTSTATUS kuhl_m_crypto_keyutil(int argc, wchar_t * argv[])
 									if(kull_m_crypto_exportPfx(hCertStore, szFile))
 										kprintf(L"OK - %s\n", szFile);
 								}
-								else PRINT_ERROR_AUTO(L"CertSetCertificateContextProperty");
+								else PRINT_ERROR_AUTO_C("CertSetCertificateContextProperty");
 							}
 							kuhl_m_crypto_FreeHandleCert(&hCertStore, &pCertContext);
 						}
 						LocalFree(pbCert);
 					}
-					else PRINT_ERROR_AUTO(L"kull_m_file_readData(cert)");
+					else PRINT_ERROR_AUTO_C("kull_m_file_readData(cert)");
 				}
 				kull_m_crypto_NCryptFreeHandle(&hProv, &ctx.hNCryptKey);
 			}
 			LocalFree(pbKey);
 		}
-		else PRINT_ERROR_AUTO(L"kull_m_file_readData(key)");
+		else PRINT_ERROR_AUTO_C("kull_m_file_readData(key)");
 	}
 	return STATUS_SUCCESS;
 }

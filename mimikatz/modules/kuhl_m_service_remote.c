@@ -80,7 +80,7 @@ BOOL kuhl_service_sendcontrol_inprocess(PWSTR ServiceName, DWORD dwControl)
 								aLocalMemory.address = currentReference->Search.Pattern;
 								if(kull_m_memory_search(&aLocalMemory, currentReference->Search.Length, &sMemory, FALSE))
 									pScSendControl = (PBYTE) sMemory.result + currentReference->Offsets.off0;
-								else PRINT_ERROR_AUTO(L"kull_m_memory_search");
+								else PRINT_ERROR_AUTO_C("kull_m_memory_search");
 							}
 							LocalFree(pNtHeaders);
 						}
@@ -111,7 +111,7 @@ BOOL kuhl_service_sendcontrol_inprocess(PWSTR ServiceName, DWORD dwControl)
 								else
 									kprintf(L"OK!\n");
 							}
-							else PRINT_ERROR_AUTO(L"kull_m_remotelib_create");
+							else PRINT_ERROR_AUTO_C("kull_m_remotelib_create");
 							LocalFree(iData);
 						}
 						kull_m_memory_free(&aRemoteFunc, 0);
@@ -123,7 +123,7 @@ BOOL kuhl_service_sendcontrol_inprocess(PWSTR ServiceName, DWORD dwControl)
 			}
 			CloseHandle(hProcess);
 		}
-		else PRINT_ERROR_AUTO(L"OpenProcess");
+		else PRINT_ERROR_AUTO_C("OpenProcess");
 	}
 	return status;
 }

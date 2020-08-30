@@ -9,11 +9,11 @@ BOOL isBusyLight = FALSE;
 PBUSYLIGHT_DEVICE kuhl_m_busylight_devices = NULL;
 
 const KUHL_M_C kuhl_m_c_busylight[] = {
-	{kuhl_m_busylight_list,			L"list",		L""},
-	{kuhl_m_busylight_status,		L"status",		L""},
-	{kuhl_m_busylight_single,		L"single",		L""},
-	{kuhl_m_busylight_off,			L"off",			L""},
-	{kuhl_m_busylight_test,			L"test",		L""},
+	{kuhl_m_busylight_list,			"list",		""},
+	{kuhl_m_busylight_status,		"status",		""},
+	{kuhl_m_busylight_single,		"single",		""},
+	{kuhl_m_busylight_off,			"off",			""},
+	{kuhl_m_busylight_test,			"test",		""},
 
 };
 

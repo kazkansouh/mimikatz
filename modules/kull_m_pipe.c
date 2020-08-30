@@ -10,7 +10,7 @@ BOOL kull_m_pipe_server(LPCWCHAR pipeName, HANDLE *phPipe)
 	BOOL status = FALSE;
 	*phPipe = CreateNamedPipe(pipeName,  PIPE_ACCESS_DUPLEX, PIPE_TYPE_MESSAGE | PIPE_READMODE_MESSAGE | PIPE_WAIT, 1, 0, 0, NMPWAIT_USE_DEFAULT_WAIT, NULL);
 	if(!(status = (*phPipe && (*phPipe != INVALID_HANDLE_VALUE))))
-		PRINT_ERROR_AUTO(L"CreateNamedPipe");
+		PRINT_ERROR_AUTO_C("CreateNamedPipe");
 	return status;
 }
 
@@ -18,7 +18,7 @@ BOOL kull_m_pipe_server_connect(HANDLE hPipe)
 {
 	BOOL status = FALSE;
 	if(!(status = (ConnectNamedPipe(hPipe, NULL) || (GetLastError() == ERROR_PIPE_CONNECTED))))
-		PRINT_ERROR_AUTO(L"ConnectNamedPipe");
+		PRINT_ERROR_AUTO_C("ConnectNamedPipe");
 	return status;
 }
 
@@ -32,11 +32,11 @@ BOOL kull_m_pipe_client(LPCWCHAR pipeName, PHANDLE phPipe)
 		if(*phPipe && (*phPipe != INVALID_HANDLE_VALUE))
 		{
 			if(!(status = SetNamedPipeHandleState(*phPipe, &dwMode, NULL, NULL)))
-				PRINT_ERROR_AUTO(L"SetNamedPipeHandleState");
+				PRINT_ERROR_AUTO_C("SetNamedPipeHandleState");
 		}
-		else PRINT_ERROR_AUTO(L"CreateFile");
+		else PRINT_ERROR_AUTO_C("CreateFile");
 	}
-	else PRINT_ERROR_AUTO(L"WaitNamedPipe");
+	else PRINT_ERROR_AUTO_C("WaitNamedPipe");
 	return status;
 }
 
@@ -75,7 +75,7 @@ BOOL kull_m_pipe_read(HANDLE hPipe, LPBYTE *buffer, DWORD *size)
 
 	if(!status)
 	{
-		PRINT_ERROR_AUTO(L"ReadFile");
+		PRINT_ERROR_AUTO_C("ReadFile");
 		*buffer = (BYTE *) LocalFree(*buffer);
 		*size = 0;
 	}
@@ -89,9 +89,9 @@ BOOL kull_m_pipe_write(HANDLE hPipe, LPCVOID buffer, DWORD size)
 	if(WriteFile(hPipe, buffer, size, &nbWritten, NULL) && (size == nbWritten))
 	{
 		if(!(status = FlushFileBuffers(hPipe)))
-			PRINT_ERROR_AUTO(L"FlushFileBuffers");
+			PRINT_ERROR_AUTO_C("FlushFileBuffers");
 	}
-	else PRINT_ERROR_AUTO(L"WriteFile");
+	else PRINT_ERROR_AUTO_C("WriteFile");
 	return status;
 }
 
@@ -106,13 +106,13 @@ BOOL kull_m_pipe_close(PHANDLE phPipe)
 			if(flags & PIPE_SERVER_END)
 			{
 				if(!DisconnectNamedPipe(*phPipe))
-					PRINT_ERROR_AUTO(L"DisconnectNamedPipe");
+					PRINT_ERROR_AUTO_C("DisconnectNamedPipe");
 			}
 			if(status = CloseHandle(*phPipe))
 				*phPipe = INVALID_HANDLE_VALUE;
-			else PRINT_ERROR_AUTO(L"CloseHandle");
+			else PRINT_ERROR_AUTO_C("CloseHandle");
 		}
-		else PRINT_ERROR_AUTO(L"GetNamedPipeInfo");
+		else PRINT_ERROR_AUTO_C("GetNamedPipeInfo");
 	}
 	return status;
 }

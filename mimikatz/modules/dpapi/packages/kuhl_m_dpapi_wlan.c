@@ -76,7 +76,7 @@ NTSTATUS kuhl_m_dpapi_wifi(int argc, wchar_t * argv[])
 			}
 			LocalFree(pFile);
 		}
-		else PRINT_ERROR_AUTO(L"kull_m_file_readData");
+		else PRINT_ERROR_AUTO_C("kull_m_file_readData");
 	}
 	else PRINT_ERROR(L"Input Wlan XML profile needed (/in:file)\n");
 	return STATUS_SUCCESS;
@@ -127,7 +127,7 @@ NTSTATUS kuhl_m_dpapi_wwan(int argc, wchar_t * argv[])
 			}
 			LocalFree(pFile);
 		}
-		else PRINT_ERROR_AUTO(L"kull_m_file_readData");
+		else PRINT_ERROR_AUTO_C("kull_m_file_readData");
 	}
 	else PRINT_ERROR(L"Input Wwan XML profile needed (/in:file)\n");
 	return STATUS_SUCCESS;

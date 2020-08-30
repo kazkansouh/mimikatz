@@ -6,17 +6,17 @@
 #include "kuhl_m_service.h"
 
 const KUHL_M_C kuhl_m_c_service[] = {
-	{kuhl_m_service_start,		L"start",		L"Start service"},
-	{kuhl_m_service_remove,		L"remove",		L"Remove service"},
-	{kuhl_m_service_stop,		L"stop",		L"Stop service"},
-	{kuhl_m_service_suspend,	L"suspend",		L"Suspend service"},
-	{kuhl_m_service_resume,		L"resume",		L"Resume service"},
-	{kuhl_m_service_preshutdown,L"preshutdown",	L"Preshutdown service"},
-	{kuhl_m_service_shutdown,	L"shutdown",	L"Shutdown service"},
-	{kuhl_m_service_list,		L"list",		L"List services"},
-	{kuhl_m_service_installme,	L"+",			L"Install Me!"},
-	{kuhl_m_service_uninstallme,L"-",			L"Install Me!"},
-	{kuhl_m_service_me,			L"me",			L"Me!"},
+	{kuhl_m_service_start,		"start",		"Start service"},
+	{kuhl_m_service_remove,		"remove",		"Remove service"},
+	{kuhl_m_service_stop,		"stop",		"Stop service"},
+	{kuhl_m_service_suspend,	"suspend",		"Suspend service"},
+	{kuhl_m_service_resume,		"resume",		"Resume service"},
+	{kuhl_m_service_preshutdown,"preshutdown",	"Preshutdown service"},
+	{kuhl_m_service_shutdown,	"shutdown",	"Shutdown service"},
+	{kuhl_m_service_list,		"list",		"List services"},
+	{kuhl_m_service_installme,	"+",			"Install Me!"},
+	{kuhl_m_service_uninstallme,"-",			"Install Me!"},
+	{kuhl_m_service_me,			"me",			"Me!"},
 };
 
 const KUHL_M kuhl_m_service = {
@@ -51,7 +51,7 @@ NTSTATUS genericFunction(KUHL_M_SERVICE_FUNC function, wchar_t * text, int argc,
 		{
 			if(function(argv[0]))
 				kprintf(L"OK\n");
-			else PRINT_ERROR_AUTO(L"Service operation");
+			else PRINT_ERROR_AUTO_C("Service operation");
 		}
 #if defined(SERVICE_INCONTROL)
 		else if(dwControl && (MIMIKATZ_NT_BUILD_NUMBER >= KULL_M_WIN_BUILD_7))
@@ -131,10 +131,10 @@ NTSTATUS kuhl_m_service_installme(int argc, wchar_t * argv[])
 				LocalFree(buff);
 			}
 		}
-		else PRINT_ERROR_AUTO(L"kull_m_file_isFileExist");
+		else PRINT_ERROR_AUTO_C("kull_m_file_isFileExist");
 		LocalFree(absFile);
 	}
-	else PRINT_ERROR_AUTO(L"kull_m_file_getAbsolutePathOf");
+	else PRINT_ERROR_AUTO_C("kull_m_file_getAbsolutePathOf");
 	return STATUS_SUCCESS;
 }
 

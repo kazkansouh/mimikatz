@@ -63,7 +63,7 @@ BOOL kull_m_remotelib_create(PKULL_M_MEMORY_ADDRESS aRemoteFunc, PREMOTE_LIB_INP
 						}
 					}
 					else if(!(hThread = CreateRemoteThread(aRemoteFunc->hMemory->pHandleProcess->hProcess, NULL, 0, (PTHREAD_START_ROUTINE) aRemoteFunc->address, aRemoteData.address, 0, NULL)))
-						PRINT_ERROR_AUTO(L"CreateRemoteThread");
+						PRINT_ERROR_AUTO_C("CreateRemoteThread");
 
 					if(hThread)
 					{
@@ -76,7 +76,7 @@ BOOL kull_m_remotelib_create(PKULL_M_MEMORY_ADDRESS aRemoteFunc, PREMOTE_LIB_INP
 					drvInfo.pArg = aRemoteData.address;
 					kprintf(L"Th @ %p\nDa @ %p\n", drvInfo.pRoutine, drvInfo.pArg);
 					if(!(success = kull_m_kernel_ioctl_handle(aRemoteFunc->hMemory->pHandleDriver->hDriver, IOCTL_MIMIDRV_CREATEREMOTETHREAD, &drvInfo, sizeof(MIMIDRV_THREAD_INFO), NULL, NULL, FALSE)))
-						PRINT_ERROR_AUTO(L"kull_m_kernel_ioctl_handle");
+						PRINT_ERROR_AUTO_C("kull_m_kernel_ioctl_handle");
 					break;
 				}
 				
@@ -129,12 +129,16 @@ BOOL kull_m_remotelib_create(PKULL_M_MEMORY_ADDRESS aRemoteFunc, PREMOTE_LIB_INP
 BOOL CALLBACK kull_m_remotelib_exports_callback_module_exportedEntry(PKULL_M_PROCESS_EXPORTED_ENTRY pExportedEntryInformations, PVOID pvArg)
 {
 	PREMOTE_EXT extension = (PREMOTE_EXT) pvArg;
-	if(pExportedEntryInformations->name)
-		if(_stricmp(extension->Function, pExportedEntryInformations->name) == 0)
+	if (pExportedEntryInformations->name) {
+		char* func = kull_m_string_unicode_to_ansi(extension->Function);
+		int r = _stricmp(func, pExportedEntryInformations->name);
+		LocalFree(func);
+		if (r == 0)
 		{
 			extension->Pointer = pExportedEntryInformations->function.address;
 			return FALSE;
 		}
+	}
 	return TRUE;
 }
 
@@ -202,11 +206,11 @@ BOOL kull_m_remotelib_CreateRemoteCodeWitthPatternReplace(PKULL_M_MEMORY_HANDLE 
 		{
 			if(!(success = kull_m_memory_copy(DestAddress, &aLocalAddr, BufferSize)))
 			{
-				PRINT_ERROR_AUTO(L"kull_m_memory_copy");
+				PRINT_ERROR_AUTO_C("kull_m_memory_copy");
 				kull_m_memory_free(DestAddress);
 			}
 		}
-		else PRINT_ERROR_AUTO(L"kull_m_memory_alloc / VirtualAlloc(Ex)");
+		else PRINT_ERROR_AUTO_C("kull_m_memory_alloc / VirtualAlloc(Ex)");
 
 		if(RemoteExt)
 			LocalFree(aLocalAddr.address);

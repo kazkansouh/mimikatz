@@ -119,7 +119,7 @@ BOOL kull_m_crypto_close_hprov_delete_container(HCRYPTPROV hProv)
 		LocalFree(container);
 	}
 	if(!status)
-		PRINT_ERROR_AUTO(L"CryptGetProvParam/CryptAcquireContextA");
+		PRINT_ERROR_AUTO_C("CryptGetProvParam/CryptAcquireContextA");
 	return status;
 }
 
@@ -523,21 +523,21 @@ BOOL kull_m_crypto_genericAES128Decrypt(LPCVOID pKey, LPCVOID pIV, LPCVOID pData
 						RtlCopyMemory(*pOut, pData, dwDataLen);
 						if(!(status = CryptDecrypt(hKey, 0, TRUE, 0, (PBYTE) *pOut, dwOutLen)))
 						{
-							PRINT_ERROR_AUTO(L"CryptDecrypt");
+							PRINT_ERROR_AUTO_C("CryptDecrypt");
 							*pOut = LocalFree(*pOut);
 							*dwOutLen = 0;
 						}
 					}
 				}
-				else PRINT_ERROR_AUTO(L"CryptSetKeyParam (IV)");
+				else PRINT_ERROR_AUTO_C("CryptSetKeyParam (IV)");
 			}
-			else PRINT_ERROR_AUTO(L"CryptSetKeyParam (MODE)");
+			else PRINT_ERROR_AUTO_C("CryptSetKeyParam (MODE)");
 			CryptDestroyKey(hKey);
 		}
-		else PRINT_ERROR_AUTO(L"kull_m_crypto_hkey");
+		else PRINT_ERROR_AUTO_C("kull_m_crypto_hkey");
 		CryptReleaseContext(hProv, 0);
 	}
-	else PRINT_ERROR_AUTO(L"CryptAcquireContext");
+	else PRINT_ERROR_AUTO_C("CryptAcquireContext");
 	return status;
 }
 
@@ -555,7 +555,7 @@ BOOL kull_m_crypto_exportPfx(HCERTSTORE hStore, LPCWSTR filename)
 		}
 	}
 	if(!isExported)
-		PRINT_ERROR_AUTO(L"PFXExportCertStoreEx/kull_m_file_writeData");
+		PRINT_ERROR_AUTO_C("PFXExportCertStoreEx/kull_m_file_writeData");
 	return isExported;
 }
 
@@ -574,13 +574,13 @@ BOOL kull_m_crypto_DerAndKeyToPfx(LPCVOID der, DWORD derLen, LPCVOID key, DWORD 
 				isExported = kull_m_crypto_DerAndKeyInfoToPfx(der, derLen, &infos, filename);
 				CryptDestroyKey(hCryptKey);
 			}
-			else PRINT_ERROR_AUTO(L"CryptImportKey");
+			else PRINT_ERROR_AUTO_C("CryptImportKey");
 			kull_m_crypto_close_hprov_delete_container(hCryptProv);
 			//CryptReleaseContext(hCryptProv, 0);
 			//if(!CryptAcquireContext(&hCryptProv, infos.pwszContainerName, NULL, PROV_RSA_FULL, CRYPT_DELETEKEYSET))
 			//	PRINT_ERROR(L"Unable to delete temp keyset %s\n", infos.pwszContainerName);
 		}
-		else PRINT_ERROR_AUTO(L"CryptAcquireContext");
+		else PRINT_ERROR_AUTO_C("CryptAcquireContext");
 		LocalFree(infos.pwszContainerName);
 	}
 	return isExported;
@@ -597,10 +597,10 @@ BOOL kull_m_crypto_DerAndKeyInfoToPfx(LPCVOID der, DWORD derLen, PCRYPT_KEY_PROV
 		{
 			if(CertSetCertificateContextProperty(pCertContext, CERT_KEY_PROV_INFO_PROP_ID, 0, (LPCVOID) pInfo))
 				isExported = kull_m_crypto_exportPfx(hTempStore, filename);
-			else PRINT_ERROR_AUTO(L"CertSetCertificateContextProperty(CERT_KEY_PROV_INFO_PROP_ID)");
+			else PRINT_ERROR_AUTO_C("CertSetCertificateContextProperty(CERT_KEY_PROV_INFO_PROP_ID)");
 			CertFreeCertificateContext(pCertContext);
 		}
-		else PRINT_ERROR_AUTO(L"CertAddEncodedCertificateToStore");
+		else PRINT_ERROR_AUTO_C("CertAddEncodedCertificateToStore");
 		CertCloseStore(hTempStore, CERT_CLOSE_STORE_FORCE_FLAG);
 	}
 	return isExported;
@@ -616,10 +616,10 @@ BOOL kull_m_crypto_DerAndKeyInfoToStore(LPCVOID der, DWORD derLen, PCRYPT_KEY_PR
 		if(CertAddEncodedCertificateToStore(hTempStore, X509_ASN_ENCODING, (LPCBYTE) der, derLen, force ? CERT_STORE_ADD_ALWAYS : CERT_STORE_ADD_NEW, &pCertContext))
 		{
 			if(!(status = CertSetCertificateContextProperty(pCertContext, CERT_KEY_PROV_INFO_PROP_ID, 0, (LPCVOID) pInfo)))
-				PRINT_ERROR_AUTO(L"CertSetCertificateContextProperty(CERT_KEY_PROV_INFO_PROP_ID)");
+				PRINT_ERROR_AUTO_C("CertSetCertificateContextProperty(CERT_KEY_PROV_INFO_PROP_ID)");
 			CertFreeCertificateContext(pCertContext);
 		}
-		else PRINT_ERROR_AUTO(L"CertAddEncodedCertificateToStore");
+		else PRINT_ERROR_AUTO_C("CertAddEncodedCertificateToStore");
 		CertCloseStore(hTempStore, CERT_CLOSE_STORE_FORCE_FLAG);
 	}
 	return status;
@@ -635,7 +635,7 @@ BOOL kull_m_crypto_CryptGetProvParam(HCRYPTPROV hProv, DWORD dwParam, BOOL withE
 		dwSizeNeeded = sizeof(DWORD);
 		if(CryptGetProvParam(hProv, dwParam, (BYTE *) simpleDWORD, &dwSizeNeeded, 0))
 			status = TRUE;
-		else if(withError) PRINT_ERROR_AUTO(L"CryptGetProvParam(simple DWORD)");
+		else if(withError) PRINT_ERROR_AUTO_C("CryptGetProvParam(simple DWORD)");
 	}
 	else
 	{
@@ -652,12 +652,12 @@ BOOL kull_m_crypto_CryptGetProvParam(HCRYPTPROV hProv, DWORD dwParam, BOOL withE
 				else
 				{
 					if(withError)
-						PRINT_ERROR_AUTO(L"CryptGetProvParam(data)");
+						PRINT_ERROR_AUTO_C("CryptGetProvParam(data)");
 					*data = (PBYTE) LocalFree(*data);
 				}
 			}
 		}
-		else if(withError) PRINT_ERROR_AUTO(L"CryptGetProvParam(init)");
+		else if(withError) PRINT_ERROR_AUTO_C("CryptGetProvParam(init)");
 	}
 	return status;
 }
@@ -1249,12 +1249,12 @@ BOOL kull_m_crypto_dh_CreateSessionKey(PKIWI_DH dh, PMIMI_PUBLICKEY publicKey)
 			{
 				if(!(status = CryptSetKeyParam(dh->hSessionKey, KP_ALGID, (PBYTE) &dh->publicKey.sessionType, 0)))
 				{
-					PRINT_ERROR_AUTO(L"CryptSetKeyParam");
+					PRINT_ERROR_AUTO_C("CryptSetKeyParam");
 					CryptDestroyKey(dh->hSessionKey);
 					dh->hSessionKey = 0;
 				}
 			}
-			else PRINT_ERROR_AUTO(L"CryptImportKey");
+			else PRINT_ERROR_AUTO_C("CryptImportKey");
 
 		}
 		else PRINT_ERROR(L"Alg mismatch: DH - %s (%08x) / P - %s (%08x)\n", kull_m_crypto_algid_to_name(dh->publicKey.sessionType), dh->publicKey.sessionType, kull_m_crypto_algid_to_name(publicKey->sessionType), publicKey->sessionType);

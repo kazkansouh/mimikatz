@@ -6,8 +6,8 @@
 #include "kuhl_m_minesweeper.h"
 
 const KUHL_M_C kuhl_m_c_minesweeper[] = {
-	{kuhl_m_minesweeper_infos,	L"infos",	L"infos"},
-	//{kuhl_m_minesweeper_bsod,	L"bsod",	L"bsod"},
+	{kuhl_m_minesweeper_infos,	"infos",	"infos"},
+	//{kuhl_m_minesweeper_bsod,	"bsod",	"bsod"},
 };
 const KUHL_M kuhl_m_minesweeper = {
 	L"minesweeper",	L"MineSweeper module", NULL,
@@ -134,7 +134,7 @@ NTSTATUS kuhl_m_minesweeper_infos(int argc, wchar_t * argv[])
 			}
 			CloseHandle(hProcess);
 		}
-		else PRINT_ERROR_AUTO(L"OpenProcess");
+		else PRINT_ERROR_AUTO_C("OpenProcess");
 	}
 	else PRINT_ERROR(L"No MineSweeper in memory!\n");
 
@@ -254,7 +254,7 @@ void kuhl_m_minesweeper_infos_parseField(PKULL_M_MEMORY_HANDLE hMemory, PSTRUCT_
 //			}
 //			CloseHandle(hProcess);
 //		}
-//		else PRINT_ERROR_AUTO(L"OpenProcess");
+//		else PRINT_ERROR_AUTO_C("OpenProcess");
 //	}
 //	else PRINT_ERROR(L"No MineSweeper in memory!\n");
 //	return STATUS_SUCCESS;

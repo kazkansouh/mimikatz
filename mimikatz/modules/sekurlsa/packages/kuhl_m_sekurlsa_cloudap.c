@@ -19,7 +19,7 @@ KULL_M_PATCH_GENERIC CloudApReferences[] = {
 
 PKIWI_CLOUDAP_LOGON_LIST_ENTRY CloudApGlobalLogonSessionList = NULL;
 
-KUHL_M_SEKURLSA_PACKAGE kuhl_m_sekurlsa_cloudap_package = {L"cloudap", kuhl_m_sekurlsa_enum_logon_callback_cloudap, FALSE, L"cloudap.dll", {{{NULL, NULL}, 0, 0, NULL}, FALSE, FALSE}};
+KUHL_M_SEKURLSA_PACKAGE kuhl_m_sekurlsa_cloudap_package = {"cloudap", kuhl_m_sekurlsa_enum_logon_callback_cloudap, FALSE, "cloudap.dll", {{{NULL, NULL}, 0, 0, NULL}, FALSE, FALSE}};
 const PKUHL_M_SEKURLSA_PACKAGE kuhl_m_sekurlsa_cloudap_single_package[] = {&kuhl_m_sekurlsa_cloudap_package};
 
 NTSTATUS kuhl_m_sekurlsa_cloudap(int argc, wchar_t * argv[])

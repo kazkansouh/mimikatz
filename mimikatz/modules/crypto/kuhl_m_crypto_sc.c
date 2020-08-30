@@ -20,7 +20,7 @@ DWORD kuhl_m_crypto_l_sc_provtypefromname(LPCWSTR szProvider)
 		}
 	}
 	if(!result && GetLastError() != ERROR_NO_MORE_ITEMS)
-		PRINT_ERROR_AUTO(L"CryptEnumProviders");
+		PRINT_ERROR_AUTO_C("CryptEnumProviders");
 	return provType;
 }
 
@@ -466,7 +466,8 @@ void kuhl_m_crypto_l_mdr(LPCWSTR szMdr, SCARDCONTEXT ctxScard, SCARDHANDLE hScar
 
 				enuma(&cd, NULL);
 				enuma(&cd, "mscp");
-				enuma(&cd, "mimikatz");
+				// appears to be listing contents of mimikatz directory, not sure why?
+				//enuma(&cd, "mimikatz");
 
 				status = cd.pfnCardDeleteContext(&cd);
 				if(status != SCARD_S_SUCCESS)
@@ -478,5 +479,5 @@ void kuhl_m_crypto_l_mdr(LPCWSTR szMdr, SCARDCONTEXT ctxScard, SCARDHANDLE hScar
 		else PRINT_ERROR(L"No CardAcquireContext export in \'%s\'\n", szMdr);
 		FreeLibrary(hModule);
 	}
-	else PRINT_ERROR_AUTO(L"LoadLibrary");
+	else PRINT_ERROR_AUTO_C("LoadLibrary");
 }

@@ -53,7 +53,7 @@ typedef struct _KUHL_M_MISC_DETOURS_HOOKS {
 } KUHL_M_MISC_DETOURS_HOOKS, *PKUHL_M_MISC_DETOURS_HOOKS;
 
 PBYTE kuhl_m_misc_detours_testHookDestination(PKULL_M_MEMORY_ADDRESS base, WORD machineOfProcess, DWORD level);
-BOOL kuhl_m_misc_generic_nogpo_patch(PCWSTR commandLine, PWSTR disableString, SIZE_T szDisableString, PWSTR enableString, SIZE_T szEnableString);
+BOOL kuhl_m_misc_generic_nogpo_patch(PCWSTR commandLine, PWSTR disableString, SIZE_T szDisableString, PSTR enableString, SIZE_T szEnableString);
 
 #if !defined(NTDSAPI)
 #define NTDSAPI DECLSPEC_IMPORT

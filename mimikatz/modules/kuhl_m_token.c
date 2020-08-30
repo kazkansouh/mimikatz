@@ -6,12 +6,12 @@
 #include "kuhl_m_token.h"
 
 const KUHL_M_C kuhl_m_c_token[] = {
-	{kuhl_m_token_whoami,	L"whoami",	L"Display current identity"},
-	{kuhl_m_token_list,		L"list",	L"List all tokens of the system"},
-	{kuhl_m_token_elevate,	L"elevate",	L"Impersonate a token"},
-	{kuhl_m_token_run,		L"run",		L"Run!"},
+	{kuhl_m_token_whoami,	"whoami",	"Display current identity"},
+	{kuhl_m_token_list,		"list",	"List all tokens of the system"},
+	{kuhl_m_token_elevate,	"elevate",	"Impersonate a token"},
+	{kuhl_m_token_run,		"run",		"Run!"},
 
-	{kuhl_m_token_revert,	L"revert",	L"Revert to proces token"},
+	{kuhl_m_token_revert,	"revert",	"Revert to proces token"},
 };
 const KUHL_M kuhl_m_token = {
 	L"token",	L"Token manipulation module", NULL,
@@ -27,7 +27,7 @@ NTSTATUS kuhl_m_token_whoami(int argc, wchar_t * argv[])
 		kuhl_m_token_displayAccount(hToken, argc);
 		CloseHandle(hToken);
 	}
-	else PRINT_ERROR_AUTO(L"OpenProcessToken");
+	else PRINT_ERROR_AUTO_C("OpenProcessToken");
 
 	kprintf(L" * Thread Token  : ");
 	if(OpenThreadToken(GetCurrentThread(), TOKEN_QUERY, TRUE, &hToken))
@@ -37,7 +37,7 @@ NTSTATUS kuhl_m_token_whoami(int argc, wchar_t * argv[])
 	}
 	else if(GetLastError() == ERROR_NO_TOKEN)
 		kprintf(L"no token\n");
-	else PRINT_ERROR_AUTO(L"OpenThreadToken");
+	else PRINT_ERROR_AUTO_C("OpenThreadToken");
 
 	return STATUS_SUCCESS;
 }
@@ -104,7 +104,7 @@ NTSTATUS kuhl_m_token_list_or_elevate(int argc, wchar_t * argv[], BOOL elevate, 
 
 	if((type == WinAccountDomainAdminsSid) || (type == WinAccountEnterpriseAdminsSid))
 		if(!kull_m_net_getCurrentDomainInfo(&pDomainInfo))
-			PRINT_ERROR_AUTO(L"kull_m_local_domain_user_getCurrentDomainSID");
+			PRINT_ERROR_AUTO_C("kull_m_local_domain_user_getCurrentDomainSID");
 
 	if(!elevate || !runIt || pData.tokenId || type || pData.pUsername)
 	{
@@ -119,9 +119,9 @@ NTSTATUS kuhl_m_token_list_or_elevate(int argc, wchar_t * argv[], BOOL elevate, 
 					LocalFree(name);
 					LocalFree(domain);
 				}
-				else PRINT_ERROR_AUTO(L"kull_m_token_getNameDomainFromSID");
+				else PRINT_ERROR_AUTO_C("kull_m_token_getNameDomainFromSID");
 			}
-			else PRINT_ERROR_AUTO(L"kull_m_local_domain_user_CreateWellKnownSid");
+			else PRINT_ERROR_AUTO_C("kull_m_local_domain_user_CreateWellKnownSid");
 		}
 		else kprintf(L"\n");
 		kprintf(L"\n");
@@ -142,7 +142,7 @@ NTSTATUS kuhl_m_token_revert(int argc, wchar_t * argv[])
 {
 	if(SetThreadToken(NULL, NULL))
 		kuhl_m_token_whoami(0, NULL);
-	else PRINT_ERROR_AUTO(L"SetThreadToken");
+	else PRINT_ERROR_AUTO_C("SetThreadToken");
 	return STATUS_SUCCESS;
 }
 
@@ -241,7 +241,7 @@ void kuhl_m_token_displayAccount(HANDLE hToken, BOOL full)
 							}
 							else if(GetLastError() == ERROR_NO_SUCH_PRIVILEGE)
 								kprintf(L"{%x; %08x}\n", p->Privileges[i].Luid.HighPart, p->Privileges[i].Luid.LowPart);
-							else PRINT_ERROR_AUTO(L"LookupPrivilegeName");
+							else PRINT_ERROR_AUTO_C("LookupPrivilegeName");
 						}
 					}
 					LocalFree(p);
@@ -319,7 +319,7 @@ BOOL CALLBACK kuhl_m_token_list_or_elevate_callback(HANDLE hToken, DWORD ptid, P
 								kuhl_m_token_whoami(0, NULL);
 								isUserOK = FALSE;
 							}
-							else PRINT_ERROR_AUTO(L"SetThreadToken");
+							else PRINT_ERROR_AUTO_C("SetThreadToken");
 						}
 						else if(pData->runIt)
 							isUserOK = !kull_m_process_run_data(pData->pCommandLine, hNewToken);

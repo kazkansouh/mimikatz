@@ -184,7 +184,7 @@ BOOL kull_m_crypto_ngc_signature_pop(PBYTE pbKey, DWORD cbKey, PBYTE pbLabel, DW
 		else PRINT_ERROR(L"No NgcSignWithSymmetricPopKey?\n");
 		FreeLibrary(hModule);
 	}
-	else PRINT_ERROR_AUTO(L"LoadLibrary");
+	else PRINT_ERROR_AUTO_C("LoadLibrary");
 	return status;
 }
 

@@ -29,7 +29,7 @@ typedef struct _REMOTE_LIB_DATA {
 
 typedef struct _REMOTE_EXT {
 	PCWCHAR	Module;
-	PCHAR	Function;
+	PCWCHAR	Function;
 	PVOID	ToReplace;
 	PVOID	Pointer;
 } REMOTE_EXT, *PREMOTE_EXT;

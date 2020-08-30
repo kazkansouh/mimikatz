@@ -1,0 +1,10 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs
+/mimikatz/x64
+/mimikatz/mimikatz.vcxproj.user
+/mimilib/x64
+/mimilove/mimilove.vcxproj.user
+/x64
