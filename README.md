@@ -1,3 +1,43 @@
+# Obfuscated `mimikatz` Experiment
+
+This repository contains a tweaked version of `mimikatz` that passes
+Windows Defender checks at time of push. It was done as a learning
+experience in how to bypass Windows Defender and is probably of
+limited use as most use-cases of `mimikatz` requires elevated system
+access, and thus can easily pause Windows Defender if needed to run
+it. In addition, **I currently have no intention of updating this code
+again**.
+
+Of note, most of the tweaked strings were changed by switching between
+*UTF8* and *UTF16* (and updating `printf` format specifiers) as it
+appears Windows Defender does not check both variants. Only in a very
+small number of cases was it needed to perform anything more
+intelligent, such as modifying strings at runtime where the change of
+string encoding would have incurred significant refactoring.
+
+Some final musings:
+
+* Given that its 2020, changing string encoding was surprisingly
+  successful! Before starting this experiment, I assumed some form of
+  real obfuscation would be needed.
+
+* While doing this, it appears that Windows Defender was using
+  something analogous to *YARA* rules to perform the detection. So it
+  was not flagging on just one string, but when a number of strings
+  were present. This meant that is possible to inject known bad
+  strings into the binary early on to identify other bad strings. This
+  was useful as it meant when there are bad strings in the `IAT`, it
+  was possible just to search for other bad strings in the main body
+  of the application to prevent the later bad strings flagging up the
+  binary.
+
+* In addition, I placed a simple `powershell` script
+  [mpcmdrun-splitter.ps1](mpcmdrun-splitter.ps1) into this repository
+  with a few useful utility cmdlets that call `MpCmdRun.exe` on a
+  file. Also, it contains a cmdlet that automates the binary search
+  process that was performed manually in [IppSec's AV
+  Evasion](https://www.youtube.com/watch?v=9pwMCHlNma4) YouTube video.
+
 # mimikatz
 
 **`mimikatz`** is a tool I've made to learn `C` and make somes experiments with Windows security.
